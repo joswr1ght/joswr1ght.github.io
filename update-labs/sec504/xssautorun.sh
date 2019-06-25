@@ -14,7 +14,7 @@ echo the stored XSS vulnerability on Rook Aviary Services.
 press_enter
 
 # Test to make sure the server is started; if it isn't, start it for the student
-curl -s 127.0.0.1:8082 | grep "Rook Aviary Services" >/dev/null
+curl -s 127.0.0.1:8080 | grep "Rook Aviary Services" >/dev/null
 if [ $? -ne 0 ] ; then
     echo "Starting the lab web server"
     pushd . >/dev/null
