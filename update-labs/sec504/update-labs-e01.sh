@@ -2,7 +2,7 @@
 { # this ensures the entire script is downloaded #
 
 # Remove default Responder.db file
-sudo rm /opt/Responder/Responder.db
+sudo rm /opt/Responder/Responder.db >/dev/null 2>&1
 
 # Update XSS lab autorun script
 pushd . >/dev/null
