@@ -1,0 +1,7 @@
+#!/bin/bash
+docker network ls | grep sec504network >/dev/null
+if [ $? -eq 0 ] ; then
+    docker network create --subnet=172.30/24 sec504dockernet
+fi
+docker run --privileged --network host --net sec504dockernet --ip 172.30.0.22 --rm --init -h sambaserv -it smbtgt
+
