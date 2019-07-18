@@ -1,6 +1,8 @@
 #!/bin/bash
 { # this ensures the entire script is downloaded #
 
+echo "Running lab update script, this will take several minutes to complete."
+
 # Remove default Responder.db file
 sudo rm /opt/Responder/Responder.db >/dev/null 2>&1
 
@@ -26,6 +28,15 @@ tar xfz smbtgt.tgz
 cd smbtgt
 docker build -t smbtgt . >/dev/null
 popd >/dev/null
+
+# Install git-lfs for lab video walkthroughs
+pushd . >/dev/null
+# Install git-lfs
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash >/dev/null
+sudo apt-get install git-lfs -y >/dev/null
+git lfs install
+popd >/dev/null
+
 
 echo "Update complete!"
 
