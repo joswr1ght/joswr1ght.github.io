@@ -6,6 +6,6 @@ Invoke-WebRequest https://joswr1ght.github.io/update-labs/sec504/git-lfs.exe -Ou
 git lfs install
 
 # Make sure the Windows Firewall stays disabled
-netsh advfirewall set allprofiles state off
+powershell Start-Process cmd.exe -ArgumentList "/c","netsh","advfirewall","set","allprofiles","state","off" -Verb runAs
 
 Write-Host "Update complete!"
