@@ -1,10 +1,9 @@
-# Update-Lab.ps1
-# Created by Mick Douglas (@BetterSafetyNet) 20190324 for SANS SEC504
-# Updates by Joshua Wright (@joswr1ght) 20190809
+## This script allows the user to update the lab wiki files.
+## Based on JLW's update wiki script used on Slingshot VM
+## Mick Douglas, @BetterSafetyNet -- 20190327
 
-# About this script:
-# When run, this will update the labs in the current VM.
-# This allows an update of the labs without distributing a new VM
+$branch = "MinorUpdate2019.2"
+
 
 function Check-NetConnection {
     $ProgressPreference = 'SilentlyContinue'
@@ -31,6 +30,49 @@ function Check-AdminStatus {
     }
 }
 
+function Run-Update {
+   $TargetDir = "C:\wiki"
+   $GitURL="ssh://git@github.com/joswr1ght/SANS-504-Student-Wiki"
+   if(!(Test-Path -Path $TargetDir)){
+      New-Item -ItemType directory -Path $TargetDir
+      if (!($?)) {
+         Write-Error "Unable to create $TargetDir"
+         exit
+      }
+      git clone $GitURL $TargetDir
+      if (!($?)) {
+         Write-Error "Unable to clone into $TargetDir"
+         exit
+      }
+      git checkout $branch
+   }
+
+   Set-Location $TargetDir
+   if (!($?)) {
+      Write-Error "Unable to cd into $TargetDir. Remove the directory and try again."
+      exit
+   }
+
+   git reset HEAD --hard
+   if (!($?)) {
+      Write-Error "Cannot perform reset on $TargetDir"
+      exit
+   }
+
+   git pull
+   if (!($?)) {
+      Write-Error "Unable to update $TargetDir"
+      exit
+   }
+   git checkout $branch
+   if (!($?)) {
+      Write-Error "Unable to checkout $branch branch"
+      exit
+   }
+
+}
+
+
 
 # Check admin status
 Check-AdminStatus
@@ -52,12 +94,12 @@ Check-NetConnection
 
 Write-Host "Running update.`n"
 
-# Download and run the update script
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-Invoke-Expression (New-Object Net.Webclient).downloadstring("https://joswr1ght.github.io/update-labs/sec504/update-labs-504.19.3.ps1")
+$OrigDir = $PSScriptRoot
+Run-Update
+Set-Location $OrigDir
 
 # Restore static IP
 Write-Host "`nRestoring static IP for lab use."
 netsh int ip set address "Ethernet0" static 10.10.0.1 255.255.0.0 0.0.0.0 1 | Out-Null
 
-Write-Host "Done."
+Write-Host "`nDone."
