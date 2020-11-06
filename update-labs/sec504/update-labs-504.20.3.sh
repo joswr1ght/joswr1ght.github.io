@@ -23,5 +23,6 @@ echo Done.
 popd >/dev/null
 
 echo "Update complete!"
+exit
 
 } # this ensures the entire script is downloaded #
