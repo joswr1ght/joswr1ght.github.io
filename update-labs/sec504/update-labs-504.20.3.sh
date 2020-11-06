@@ -13,11 +13,12 @@ cd $HOME/labs
 git checkout bin/update-labs
 git checkout weblab/php.log
 git pull >/dev/null
-echo Reverting to lab IP address configuration
-connect-lab
+echo Network temporarily offline while rebuilding Docker target
+ifconfig eth0 down
 cd $HOME/labs/pivotlab/drupal
 echo Rebuilding Docker target for pivot lab
 ./build.sh >/dev/null 2>/dev/null
+ifconfig eth0 up
 echo Done.
 popd >/dev/null
 
