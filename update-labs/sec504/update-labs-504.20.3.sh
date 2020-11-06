@@ -21,8 +21,8 @@ echo Rebuilding Docker target for pivot lab
 sudo ifconfig eth0 up
 echo Done.
 popd >/dev/null
+connect-net
 
 echo "Update complete!"
-exit
 
 } # this ensures the entire script is downloaded #
