@@ -3,6 +3,12 @@
 
 echo "Running lab update script."
 
+# Fix Please tell me who you are problem running update-wiki
+cd $HOME/wiki
+git pull >/dev/null 2>/dev/null
+git reset --hard origin/MinorUpdate2020.2
+
+
 # Fix problem with SSH pivot lab and Drupal target unable to connect back
 set -euo pipefail
 
