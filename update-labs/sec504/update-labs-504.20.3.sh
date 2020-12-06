@@ -15,9 +15,19 @@ git checkout weblab/php.log
 git pull >/dev/null
 echo Network temporarily offline while rebuilding Docker target
 sudo ifconfig eth0 down
-cd $HOME/labs/pivotlab/drupal
+
 echo Rebuilding Docker target for pivot lab
+cd $HOME/labs/pivotlab/drupal
 ./build.sh >/dev/null 2>/dev/null
+
+echo Rebuilding Docker target for Bootcamp: Common Commands
+cd $HOME/labs/bootcamp/bc-commoncommands
+./build.sh >/dev/null 2>/dev/null
+
+echo Rebuilding Docker target for Bootcamp: Olympic Event
+cd $HOME/labs/bootcamp/bc-olympicevent
+./build.sh >/dev/null 2>/dev/null
+
 sudo ifconfig eth0 up
 echo Done.
 popd >/dev/null
