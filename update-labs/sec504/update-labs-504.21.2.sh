@@ -3,7 +3,7 @@
 
 echo "Running lab update script."
 
-echo "Updating JSON Bootcamp."
+echo "Updating Bootcamp Containers."
 pushd . >/dev/null
 (cd /home/sec504/labs && git pull && cd bootcamp/bc-json && ./build.sh && cd ../bc-networking && ./build.sh) >/tmp/update-labs.log 2>&1
 if [ $? -ne 0 ]; then
