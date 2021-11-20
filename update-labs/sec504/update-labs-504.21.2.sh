@@ -3,7 +3,7 @@
 
 echo "Running lab update script."
 
-echo "Updating bootcamp containers. This will take 2-3 minutes."
+echo "Updating bootcamp containers."
 pushd . >/dev/null
 (cd /home/sec504/labs && git pull && cd bootcamp/bc-json && ./build.sh && cd ../bc-networking && ./build.sh && cd ../bc-olympicevent && ./build.sh) >/tmp/update-labs.log 2>&1
 if [ $? -ne 0 ]; then
