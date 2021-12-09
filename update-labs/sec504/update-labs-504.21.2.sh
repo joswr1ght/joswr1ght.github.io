@@ -3,9 +3,9 @@
 
 echo "Running lab update script."
 
-echo "Updating bootcamp containers."
+echo "Updating containers."
 pushd . >/dev/null
-(cd /home/sec504/labs && git pull && cd bootcamp/bc-json && ./build.sh && cd ../bc-networking && ./build.sh && cd ../bc-olympicevent && ./build.sh) >/tmp/update-labs.log 2>&1
+(cd /home/sec504/labs && git pull && cd bootcamp/bc-json && ./build.sh && cd ../bc-networking && ./build.sh && cd ../bc-olympicevent && ./build.sh && cd ../../weblab && ./build.sh) >/tmp/update-labs.log 2>&1
 if [ $? -ne 0 ]; then
     echo "Update process experienced an error. See /tmp/update-labs.log and contact the instructor for assistance."
 fi
