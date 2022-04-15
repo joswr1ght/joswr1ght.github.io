@@ -3,7 +3,7 @@
 
 echo "Running lab update script."
 pushd .
-sudo sed -i 's/127.0.0.1   localhost/127.0.0.1     localhost sec504-slingshot/' /etc/hosts
+sudo sed -i '1 s/127.0.0.1.*/127.0.0.1 slingshot sec504-slingshot/' /etc/hosts
 popd
 echo "Update complete!"
 
