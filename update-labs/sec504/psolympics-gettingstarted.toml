@@ -257,7 +257,7 @@ answer = '`Start-Process Notepad`'
 type = 'py'
 py = '''
 d=subprocess.Popen('wmic process get name', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT).communicate()[0];
-ret = 'Notepad' in d.decode('utf8')
+ret = 'notepad' in d.decode('utf8')
 '''
 
 
@@ -300,7 +300,7 @@ answer = '`Stop-Process -Name Notepad`'
 type = 'py'
 py = '''
 d=subprocess.Popen('wmic process get name', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT).communicate()[0];
-ret = 'Notepad' not in d.decode('utf8')
+ret = 'notepad' not in d.decode('utf8')
 '''
 
 
