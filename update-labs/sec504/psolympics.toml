@@ -1,5 +1,5 @@
 userdatafile = 'userdata.toml'
-psprofilefile = 'C:\Users\User\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1'
+psprofilefile = 'C:\Users\sec504\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1'
 stopfile = 'C:\TEMP\psolympics-stop.txt'
 hintfile = 'C:\TEMP\psolympics-hint.txt'
 skipfile = 'C:\TEMP\psolympics-skip.txt'
