@@ -5,26 +5,26 @@ hintfile = 'C:\TEMP\psolympics-hint.txt'
 skipfile = 'C:\TEMP\psolympics-skip.txt'
 transcriptfile = 'C:\TEMP\psolympics-transcript.txt'
 # This needs to be an absolute path for Windows Terminal profile use
-tpane = 'Z:\sec504windowslabfiles\psolympics\tpane.exe'
+tpane = 'C:\Tools\psolympics\tpane.exe'
 
 [[events]]
 
 name = 'Getting Started with PowerShell'
-path = 'Z:\sec504windowslabfiles\psolympics\psolympics-gettingstarted.toml'
+path = 'C:\Tools\psolympics\psolympics-gettingstarted.toml'
 
 [[events]]
 
 name = 'Working with the Pipeline'
-path = 'Z:\sec504windowslabfiles\psolympics\psolympics-pipelines.toml'
+path = 'C:\Tools\psolympics\psolympics-pipelines.toml'
 
 [[events]]
 
 name = 'Navigating PowerShell Drives'
-path = 'Z:\sec504windowslabfiles\psolympics\psolympics-drives.toml'
+path = 'C:\Tools\psolympics\psolympics-drives.toml'
 
 [[events]]
 
 name = 'Working with PowerShell Variables'
-path = 'Z:\sec504windowslabfiles\psolympics\psolympics-variables.toml'
+path = 'C:\Tools\psolympics\psolympics-variables.toml'
 
 
