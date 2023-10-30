@@ -3,8 +3,6 @@
 
 echo "Running lab update script."
 pushd . >/dev/null 2>&1
-cd ~/labs
-git pull >/dev/null
 
 # Move WeTTY to TCP/3001
 sed -i 's/:3000/:3001/' /opt/lightninglabs/sample/docker/ll-wetty/Dockerfile /opt/lightninglabs/src/templates/footer.html
