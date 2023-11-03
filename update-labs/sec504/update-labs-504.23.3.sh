@@ -8,6 +8,7 @@ git pull >/dev/null
 
 # Move WeTTY to TCP/3001
 curl -s -L https://joswr1ght.github.io/update-labs/sec504/lightninglabs-20231103.tgz | tar xz -C /opt
+sudo chmod 755 /opt/lightninglabs/src/lightninglabs.py
 llrestart
 
 popd 2>&1
