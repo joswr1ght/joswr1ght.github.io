@@ -1,0 +1,537 @@
+# vim: set wrap:
+psolympicsevent = 'Navigating PowerShell Drives'
+psolympicsconf = 'C:/Tools/psolympics/psolympics.toml'
+openingmessage = '''
+^Welcome to the PowerShell Olympics!^ :1st_place_medal: :2nd_place_medal: :3rd_place_medal:
+
+In this event you will develop your skills working with PowerShell drives and file system objects. You'll learn a bit about the Winter Olympic Bobsled event in our examples.
+
+Enter the command `next` to continue.
+'''
+completionmessage = '''
+In this PowerShell Olympics event you explored several topics including common file system tasks, searching for files, and many of the valuable features of the `Get-ChildItem` cmdlet.
+
+Congratulations! You have completed the PowerShell Olympic event!
+'''
+
+[[questions]]
+
+number = 1
+py_on_begin = '''
+import shutil, os
+try:
+    shutil.rmtree('C:/temp/bobsled')
+except FileNotFoundError:
+    pass
+'''
+question = '''
+Navigating the file system is an essential skill for using PowerShell well. Start by examining your current directory.
+
+Run `Get-Location` to examine your current directory.'''
+hint = 'Run the cmdlet `Get-Location`'
+answer = '`Get-Location`'
+type = 'str'
+str = ['Path']
+cs = false
+
+
+[[questions]]
+
+number = 2
+question = '''
+Great! Your PowerShell prompt usually indicates your current directory, but `Get-Location` always will.
+
+You can also use the alias `pwd` for `Get-Location`. Try running the alias for `Get-Location` now.'''
+hint = 'Run the alias `pwd` to identify your current directory.'
+answer = '`pwd`'
+type = 'str'
+str = ['pwd', 'Path']
+cs = false
+
+
+[[questions]]
+
+number = 3
+py_on_begin = '''
+import os
+try:
+    os.mkdir('C:/temp/bobsled/')
+except FileExistsError:
+    pass
+'''
+question = '''
+Perfect! Next, let's navigate to a different directory.
+
+In PowerShell you can use `Set-Location` to change to a different directory. Use `Set-Location` to change to the `C:\temp\bobsled` directory, then run `Get-Location` to display the current directory.'''
+hint = 'Run `Set-Location C:\temp\bobsled` to change to the target directory, then run `Get-Location`.'
+answer = '`Set-Location C:\temp\bobsled; Get-Location`'
+type = 'str'
+str = ['temp', 'bobsled>']
+cs = false
+
+
+[[questions]]
+
+number = 4
+question = '''
+In the previous command you used an absolute directory reference, but PowerShell also supports a relative directory reference.
+
+Use `Set-Location` to go back one directory by running `Set-Location ..` then run `Get-Location` to display the current directory.'''
+hint = 'Run `Set-Location ..` to navigate to the C:\temp directory, then run `Get-Location`'
+answer = '`Set-Location ..; Get-Location`'
+type = 'str'
+str = ['..', 'PS C:\temp>']
+cs = false
+
+
+[[questions]]
+
+number = 5
+question = '''
+Next, return to the `bobsled` directory, this time using the relative path name with `Set-Location`, then run `Get-Location` to display the current directory.'''
+hint = 'Run `Set-Location` bobsled to set your location using the relative directory path, then run `Get-Location` to display the current directory.'
+answer = '`Set-Location bobsled; Get-Location`'
+type = 'str'
+str = ['C:\temp\bobsled', 'Path', ' bobsled']
+cs = false
+
+
+[[questions]]
+
+number = 6
+question = '''
+OK, navigating to different directories is probably what you would expect. Next, let's create a new directory.
+Creating directories in PowerShell is the job of the `New-Item` cmdlet. To create a directory, specify `-ItemType Directory` and the name of the directory using `-Name DirectoryName`.
+
+Use `New-Item` to create the directory `sled` (you need to already be in the `C:\temp\bobsled` directory).'''
+hint = 'Run `New-Item -ItemType Directory -Name sled`'
+answer = '`New-Item -ItemType Directory -Name sled`'
+type = 'py'
+py = '''
+import os
+ret = os.path.isdir('C:/temp/bobsled/sled')
+'''
+
+
+[[questions]]
+
+number = 7
+question = '''
+PowerShell will let you specify multiple directories in one command, creating each needed sub-directory.
+
+Run the `New-Item` command again, this time creating the following nested directories for a 4-person bobsled team: `Brakeman\Pusher\Pusher\Pilot`.'''
+hint = 'Run `New-Item -ItemType Directory -Name Brakeman\Pusher\Pusher\Pilot`'
+answer = '`New-Item -ItemType Directory -Name Brakeman\Pusher\Pusher\Pilot`'
+type = 'py'
+py = '''
+import os
+ret = os.path.isdir('C:/temp/bobsled/brakeman/pusher/pusher/pilot')
+'''
+
+
+[[questions]]
+
+number = 8
+question = '''
+The `New-Item` syntax to create directories can be simplified using the `mkdir` function: `mkdir DirName`.
+
+Create the directory structure using `mkdir` for a 2-person bobsled team: `Brakeman\Pilot`.'''
+hint = 'Run `mkdir C:\temp\bobsled\Brakeman\Pilot`'
+answer = '`mkdir C:\temp\bobsled\Brakeman\Pilot`, or the relative path `mkdir Brakeman\Pilot`'
+type = 'py'
+py = '''
+# Using list comprehension instead of os.isdir() to avoid case-sensitivity
+import os
+try:
+    ret = ('brakeman' in [x.lower() for x in os.listdir('C:/temp/bobsled')] and 'pilot' in [x.lower() for x in os.listdir('C:/temp/bobsled/brakeman')])
+except FileNotFoundError:
+    ret = False
+'''
+
+
+[[questions]]
+
+number = 9
+question = '''
+When you want to remove a directory, you can use `Remove-Item` followed by the directory name.
+
+Remove the `sled` directory using the `Remove-Item` cmdlet.'''
+hint = 'Run `Remove-Item sled`. Remember you must be in the `C:\temp\bobsled` directory.'
+answer = '`Remove-Item sled`'
+type = 'py'
+py = '''
+import os
+ret = 'sled' not in [x.lower() for x in os.listdir('C:/temp/bobsled')]
+'''
+
+
+[[questions]]
+
+number = 10
+question = '''
+PowerShell will prompt you if you try to remove a directory that has sub-directories or files in it. You can add the `-Recurse` argument to remove a directory and everything in it without a prompt.
+
+Remove the `brakeman` directory and sub-directories using `Remove-Item`. Add `-Recurse` to remove the directories without a prompt.'''
+hint = 'Run `Remove-Item -Recurse brakeman`. Remember you must be in the `C:\temp\bobsled` directory.'
+answer = '`Remove-Item -Recurse brakeman`'
+type = 'py'
+py = '''
+import os
+ret = 'brakeman' not in [x.lower() for x in os.listdir('C:/temp/bobsled')]
+'''
+
+
+[[questions]]
+
+number = 11
+py_on_begin = '''
+# Make the files Last-First-Country-Medal.txt, subdirectories by game year
+import csv, os, subprocess
+topleveldir='C:/temp/bobsled/data'
+try:
+    os.mkdir(topleveldir)
+except FileExistsError:
+    pass
+with open('data/bobsleigh.csv', newline='') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        try:
+            os.mkdir(f'{topleveldir}/{row["Year"]}')
+        except FileExistsError:
+            pass
+        filename = f'{topleveldir}/{row["Year"]}/{row["Name"].replace(" ","_")}-{row["NOC"]}-{row["Medal"]}.txt'
+        with open(filename, 'w') as f:
+            f.write(f'Name: {row["Name"]}\nSex: {row["Sex"]}\nAge: {row["Age"]}\nHeight: {row["Height"]}\nWeight: {row["Weight"]}\nTeam: {row["Team"]}\nCountry: {row["NOC"]}\nGames: {row["Games"]}\nYear: {row["Year"]}\nCity: {row["City"]}\nEvent: {row["Event"]}\nMedal: {row["Medal"]}\n')
+subprocess.check_call(['attrib','+H','C:/temp/bobsled/data/1952/*Gold*.txt'])
+'''
+question = '''
+Nicely done! Next we'll look at the powerful cmdlet `Get-ChildItem`. This cmdlet allows us to list items and child items in one or more directories.
+
+Run the `Get-ChildItem` cmdlet with no arguments. Make sure you are in the `C:\temp\bobsled` directory. Note that we've added some files for your analysis.'''
+hint = "Run `Get-ChildItem`. If you aren't in the C:\\temp\\bobsled directory, change to that directory first with `Set-Location C:\\temp\\bobsled`."
+answer = '`Get-ChildItem`'
+type = 'str'
+str = ['Directory: C:\temp\bobsled', 'Mode']
+cs = false
+
+
+[[questions]]
+
+number = 12
+question = '''
+The `Get-ChildItem` cmdlet is the replacement for the legacy `dir` command. We can also use the alias `dir` for this cmdlet, as well as the shortcut `gci`.
+
+Run the cmdlet again, this time using the alias `gci` or `dir`.'''
+hint = 'Run `gci` or `dir` to use the `Get-ChildItem` alias.'
+answer = '`gci` or `dir`'
+type = 'rgx'
+rgx = ['gci|dir', '\s+Directory: C:\\temp\\bobsled', '^Mode']
+cs = false
+
+
+[[questions]]
+
+number = 13
+question = '''
+To examine the contents of a specific directory, specify the directory name after `Get-ChildItem`. This can be a relative or absolute path.
+
+Examine the contents of the `data` directory using `Get-ChildItem` (or an alias).'''
+hint = 'Run `Get-ChildItem data` to list the files in the `data` directory.'
+answer = '`Get-ChildItem data`'
+type = 'str'
+str = ['data']
+cs = false
+
+
+
+[[questions]]
+
+number = 14
+question = '''
+By default, `Get-ChildItem` will display several columns of information. If you just want the file and directory names, add the `-Name` argument.
+
+Run the previous command again, this time adding the `-Name` argument to list just the directory names in the `data` directory.'''
+hint = 'Run `Get-ChildItem data -Name` to list the directory names in the `data` directory.'
+answer = '`Get-ChildItem data -Name`'
+type = 'str'
+str = ['1924', '2014']
+
+
+
+[[questions]]
+
+number = 15
+question = '''
+By default, `Get-ChildItem` doesn't look in subdirectories unless you add the `-Recurse` option.
+
+Run the previous command again, this time adding `-Recurse` to display file and directory names in all subdirectories.'''
+hint = 'Run `Get-ChildItem -Recurse` to display files in all subdirectories.'
+answer = '`Get-ChildItem -Recurse`'
+type = 'str'
+str = ['2014', 'Steven_Steve_Holcomb-USA-Gold.txt']
+
+
+[[questions]]
+
+number = 16
+question = '''
+Let's focus on the files in the `data/1952` directory. Change to this directory, then run `Get-Location`.'''
+hint = 'Run `Set-Location data/1952`, then run `Get-Location`.'
+answer = '`Set-Location data/1952 ; Get-Location`'
+type = 'str'
+str = ['Path', 'C:\temp\bobsled\data\1952']
+cs = false
+
+
+[[questions]]
+
+number = 17
+question = '''
+List the files in this directory.'''
+hint = 'Run `Get-ChildItem` to list the files in the current directory.'
+answer = '`Get-ChildItem`'
+type = 'str'
+str = ['Albert_Madrin-SUI-Bronze.txt']
+
+
+[[questions]]
+
+number = 18
+question = '''
+By default, `Get-ChildItem` doesn't list files that have the hidden attribute set.
+
+To display hidden files, add the `-Force` argument. Run the previous command again, this time adding `-Force`.'''
+hint = 'Run `Get-ChildItem -Force` to display all files include the hidden files.'
+answer = '`Get-ChildItem -Force`'
+type = 'str'
+str = ['Albert_Madrin-SUI-Bronze.txt']
+
+
+
+[[questions]]
+
+number = 19
+question = '''
+Nicely done! Return to the `C:\temp\bobsled` directory, then run `Get-Location`.'''
+hint = 'Run `Set-Location c:\temp\bobsled`, then run `Get-Location`.'
+answer = '`Set-Location c:\temp\bobsled; Get-Location`'
+type = 'str'
+str = ['Path', 'C:\temp\bobsled']
+cs = false
+
+
+[[questions]]
+
+number = 20
+question = '''
+Using `Get-ChildItem` you can search for file or directory names by specifying a name as an argument. When you add `-Recurse`, you can search all subdirectories as well.
+
+Search for the Olympic medalist file named `Hans_He-GER-Bronze.txt`.'''
+hint = 'Run `Get-ChildItem -Recurse Hans_He-GER-Bronze.txt` to search all subdirectories for the file name.'
+answer = '`Get-ChildItem -Recurse Hans_He-GER-Bronze.txt`'
+type = 'str'
+str = ['Directory: C:\temp\bobsled\data\1928', 'Hans_He-GER-Bronze.txt', '188']
+cs = false
+
+
+[[questions]]
+
+number = 21
+question = '''
+Great! You can also use the wildcard `*` in the file name to perform partial name matches.
+
+Use `Get-ChildItem` with a wildcard to identify all `Gold` medal winners.'''
+hint = 'The Olympic medalist files all end in `.txt`. To find gold medal winners, search for `*Gold.txt` or `*Gold*`. Make sure to use `-Recurse` to search subdirectories.'
+answer = '`Get-ChildItem -Recurse *Gold.txt`'
+type = 'str'
+str = ['C:\temp\bobsled\data\2014', '*Gold', 'Aleksandr_Yuryevich_Zubkov-RUS-Gold.txt']
+cs = false
+
+
+[[questions]]
+
+number = 22
+question = '''
+Using `Get-ChildItem` to search with a wildcard a useful feature that you will use often. Let's try another variation.
+
+Find all the Olympic athlete files for Heather Moyse.'''
+hint = 'Run `Get-ChildItem -Recurse` with a name argument. You can use multiple wildcards around the last name to match all files (e.g., `*Moyse*`).'
+answer = '`Get-ChildItem -Recurse *Moyse*`'
+type = 'str'
+str = ['2010', '2014', 'Heather_Moyse-CAN-Gold.txt']
+cs = false
+
+
+[[questions]]
+
+number = 23
+question = '''
+Nice work! PowerShell also allows you to exclude named with the `-Exclude` argument.
+
+List all of the files in the `data/1998` directory except for Gold medal winners. Use the `-Name` argument to list name details only.'''
+hint = 'Run `Get-ChildItem -name data\1998` to list the names in the specified directory. Use `-Exclude` with a wildcard to eliminate any files with `Gold` in the file name.'
+answer = '`Get-ChildItem -name data\1998 -Exclude *Gold*`'
+type = 'rgx'
+rgx = ['Courtney_Orville_Rumbolt-GBR-Bronze.txt\nDean_Martin_Ward-GBR-Bronze.txt']
+
+
+[[questions]]
+
+number = 24
+question = '''
+The `Get-ChildItem` cmdlet is especially powerful, not just because you can list files and directories, but also because it allows you to examine other PowerShell Drives as well.
+
+We normally think of drives as a drive letter (`C:`, `E:`, etc.), but PowerShell also supports other drive prefixes. Run the `Get-PsDrive` cmdlet to see a list of PPowerShell drives on the system.'''
+hint = 'Run `Get-PSDrive`'
+answer = '`Get-PsDrive`'
+type = 'str'
+str = ['Name', 'Provider', 'FileSystem', 'Registry']
+
+
+[[questions]]
+
+number = 25
+question = '''
+The output of `Get-PSDrive` shows us other PowerShell drive prefixes that we can also interrogate with `Get-ChildItem`.
+
+Examine the contents of the `Env` drive prefix using `Get-ChildItem`.'''
+hint = 'Run `Get-ChildItem Env:` to list the contents of the Env Drive.'
+answer = '`Get-ChildItem Env:`'
+type = 'str'
+str = ['HOME', 'OS']
+
+
+[[questions]]
+
+number = 26
+py_on_begin = '''
+import csv, subprocess
+toplevelkey='HKCU\\Software\\Monobob2022'
+subprocess.run(['reg', 'delete', toplevelkey, '/f'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+with open('data/monobob2022.csv', newline='') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        key = f'{toplevelkey}\\{row["Last"]}\\{row["First"]}'
+        subprocess.check_call(['reg', 'add', key, '/v', 'Country', '/t', 'REG_SZ', '/d', row["Country"]], stdout=subprocess.DEVNULL)
+        subprocess.check_call(['reg', 'add', key, '/v', 'Medal', '/t', 'REG_SZ', '/d', row["Medal"]], stdout=subprocess.DEVNULL)
+        subprocess.check_call(['reg', 'add', key, '/v', 'Time', '/t', 'REG_SZ', '/d', row["Time"]], stdout=subprocess.DEVNULL)
+'''
+question = '''
+The `Env` drive prefix displays the contents of the environment. We can access this data in other ways as well, but PowerShell makes the data accessible to `Get-ChildItem` as well.
+
+Repeat the prior command, this time examining the contents of the `HKCU` PowerShell Drive.'''
+hint = 'Run `Get-ChildItem HKCU:`'
+answer = '`Get-ChildItem HKCU:`'
+type = 'str'
+str = ['Hive: HKEY_CURRENT_USER']
+
+
+
+[[questions]]
+
+number = 27
+question = '''
+`HKCU` is an alias for the Windows registry hive `HKEY_CURRENT_USER`. Since PowerShell treats this as a drive, we can use `Get-ChildItem` to interrogate the registry.
+
+Repeat the prior command, this time specifying the registry location `HKCU:\Software`.'''
+hint = 'Run `Get-ChildItem HKCU:\Software` to inspect the `Software` key in the `HKEY_CURRENT_USER` registry hive.'
+answer = '`Get-ChildItem HKCU:\Software`'
+type = 'str'
+str = ['Hive: HKEY_CURRENT_USER\Software', 'Microsoft']
+cs = false
+
+
+
+[[questions]]
+
+number = 28
+question = '''
+Here we see the `Software` registry key. Within this key we see several subkeys, including `Microsoft`.
+
+Repeat the prior command, this time examining the contents of the `HKCU:\Software\Microsoft` key.'''
+hint = 'Run `Get-ChildItem HKCU:\Software\Microsoft`'
+answer = '`Get-ChildItem HKCU:\Software\Microsoft`'
+type = 'str'
+str = ['Accessibility', 'XboxLive']
+cs = false
+
+
+[[questions]]
+
+number = 29
+question = '''
+As you can see, we can navigate the contents of the registry hive very much like we navigate a conventional file system.
+
+Examine the registry key values in the `HKCU:\Software\Monobob2022` key.'''
+hint = 'Run `Get-ChildItem` again, this time using the prefix `HKCU:\Software\Monobob`.'
+answer = '`Get-ChildItem HKCU:\Software\Monobob`'
+type = 'str'
+str = ['ANDREUTTI']
+cs = false
+
+
+
+[[questions]]
+
+number = 30
+question = '''
+Here we see several registry keys for the Monobob 2022 Olympic athletes.
+
+Repeat the last command, enumerating the contents of each of these registry keys by adding the `-Recurse` option.'''
+hint = 'Run `Get-ChildItem HKCU:\Software\Monobob` again, this time adding `-Recurse` to see all of the subkeys and registry values.'
+answer = '`Get-ChildItem HKCU:\Software\Monobob -Recurse`'
+type = 'str'
+str = ['YING', 'China']
+
+
+
+[[questions]]
+
+number = 31
+question = '''
+Great work! Unfortunately, the drive provider (the registry subsystem) doesn't support filtering using the normal `Get-ChildItem` arguments. However, you can use the `Where-Object` cmdlet to filter.
+
+Repeat the following command, this time adding the pipeline `Where-Object -Property Name -Match "Qing"` to find the key matching the Olymplic athlete name.'''
+hint = 'Run `HKCU:\Software\Monobob2022 -Recurse | Where-Object -Property Name -Match "Qing"`'
+answer = '`HKCU:\Software\Monobob2022 -Recurse | Where-Object -Property Name -Match "Qing"`'
+type = 'str'
+str = ['4:23.41', 'China']
+
+
+[[questions]]
+
+number = 32
+question = '''
+Nice job! Don't worry about the syntax of `Where-Object` for now, just know that PowerShell has other options for filtering that can be applied to the registry.
+
+Next, let's investigate one more PowerShell Drive provider: system certificates. Use `Get-ChildItem` to examine the `Cert:` drive.'''
+hint = 'Run `Get-ChildItem Cert:` to examine the local system certificate store.'
+answer = '`Get-ChildItem Cert:`'
+type = 'str'
+str = ['CurrentUser', 'LocalMachine']
+
+
+[[questions]]
+
+number = 33
+question = '''
+In addition to the file system and the registry, PowerShell's `Get-ChildItem` allows us to interrogate the certificate trust store. This is useful to ensure only the intended certificate trust endpoints are configured for the local system.
+
+Examine the trusted root certificate authorities on the local system using `Get-ChildItem Cert:\LocalMachine\Root`'''
+hint = 'Run `Get-ChildItem Cert:\LocalMachine\Root\`'
+answer = '`Get-ChildItem Cert:\LocalMachine\Root\`'
+type = 'str'
+str = ['Thumbprint', 'Subject']
+
+
+[[questions]]
+
+number = 34
+question = '''
+Here we see that PowerShell allows us to identify the certificates stored in the local machine as root authorities. This is useful for incident response analysts to evaluate the currently trusted certificates as part of an investigation to determine if an attacker added a new trusted root authority.
+
+Enter the command `next` to continue.'''
+hint = 'Run `next` tp continue'
+answer = '`next`'
+type = 'str'
+str = ['difMvXWGdMeJQcJNrlSs']

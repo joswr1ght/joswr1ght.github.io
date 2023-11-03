@@ -1,0 +1,890 @@
+# vim: set wrap:
+psolympicsevent = 'Working with PowerShell Variables'
+psolympicsconf = 'C:/Tools/psolympics/psolympics.toml'
+completionmessage = '''
+In this PowerShell Olympics event you explored the use of PowerShell variables. You looked at several automatic variables that PowerShell makes available in every session, and how to work with them. You also looked at variable types including strings, integers, arrays, date/time, and complex objects returned by PowerShell commands. Finally, you looked at how you can apply what you've learned through some examples that use PowerShell substitution to leverage variables in strings. :sunglasses:
+
+Congratulations! You have completed the PowerShell Olympic event!
+'''
+openingmessage = '''
+^Welcome to the PowerShell Olympics!^ :1st_place_medal: :2nd_place_medal: :3rd_place_medal:
+
+In this event you will develop your skills working with PowerShell variables. We'll look at automatic variables and how we can use them in a PowerShell session, how we can create and manage our own variables, a bit about variable types in PowerShell, and how we can leverage variables in different practical use cases.
+
+Enter the command `next` to continue.
+'''
+
+[[questions]]
+
+number = 1
+py_on_begin = '''
+from pathlib import *
+import psutil
+
+htmlreport = Path(f'{Path.home()}/report.html')
+if htmlreport.is_file():
+    htmlreport.unlink()
+
+# If the rexplorer process is running, stop it
+processes = psutil.process_iter()
+for proc in processes:
+    if (proc.name() == 'rexplorer.exe'):
+        proc.kill()
+'''
+question = '''
+PowerShell has support for variables: named objects that hold data and code. First we'll look at PowerShell's ^automatic variables^.
+
+PowerShell has several automatic variables available to every PowerShell session that describes the environment. Let's examine several of them.
+
+Type `$Host` and press Enter.'''
+hint = 'Type `$Host` and press Enter.'
+answer = '`$Host`'
+type = 'str'
+str = ['Name', 'Version', 'InstanceId']
+section = 'Automatic Variables'
+
+
+
+[[questions]]
+
+number = 2
+question = '''
+In PowerShell, variables start with the dollar sign. Each PowerShell session has automatic variables that are created and maintained by PowerShell. `$Host` is one that has several properties and methods.
+
+Examine the available members by typing `$Host | Get-Member`, then press Enter.'''
+hint = 'Type `$Host | Get-Member`, then press Enter.'
+answer = '`$Host | Get-Member`'
+type = 'str'
+str = ['TypeName: System.Management.Automation.Internal.Host.InternalHost']
+
+
+
+[[questions]]
+
+number = 3
+question = '''
+The `$Host` variable is an object, just like everything else in PowerShell. Here we see the names of the properties and the methods. We can access these object members using dot notation.
+
+Access the `Version` property of the `$Host` variable: type `$Host.Version`, then press Enter.'''
+hint = 'Type `$Host.Version`, then press Enter.'
+answer = '`$Host.Version`'
+type = 'str'
+str = ['Major', 'Minor', 'Build', 'Revision']
+
+
+
+[[questions]]
+
+number = 4
+question = '''
+Like `$Host`, `$Host.Version` is also a PowerShell object. Accessing this member shows the table format for the major, minor, build, and revision members. We can see all of the members in this object like we did for `$Host` using dot notation.
+
+Type `$Host.Version | Get-Member`, then press Enter.'''
+hint = 'Type `$Host.Version | Get-Member`, then press Enter.'
+answer = '`$Host.Version | Get-Member`'
+type = 'str'
+str = ['TypeName: System.Version']
+
+
+
+[[questions]]
+
+number = 5
+question = '''
+Here we see the list of properties for the `$Host.Version` property. If you want to access just the `Major` value you can reference this member directly using more dot notation.
+
+Type `$Host.Version.Major`, then press Enter.'''
+hint = 'Type `$Host.Version.Major`, then press Enter.'
+answer = '`$Host.Version.Major`'
+type = 'str'
+str = ['$host.version.major']
+cs = false
+
+
+
+[[questions]]
+
+number = 6
+question = '''
+You can also invoke the methods associated with the `$Host.Version` object by specifying the method name followed by `()` (sometimes with a value inside the parenthesis).
+
+Invoke the `ToString()` method by typing `$Host.Version.ToString()`, then press Enter.'''
+hint = 'Type `$Host.Version.ToString()`, then press Enter.'
+answer = '`$Host.Version.ToString()`'
+type = 'str'
+str = ['$Host.Version.ToString()']
+cs = false
+
+
+[[questions]]
+
+number = 7
+question = '''
+Here's the bottom line: a PowerShell variable holds zero, one, or more objects that can be simple (such as a string) or complex (such as the `$Host` object). Next, let's take a look at a few more useful variables.
+
+Type `$Home` then press Enter.'''
+hint = 'Type `$Home` then press Enter.'
+answer = '`$Home`'
+type = 'str'
+str = ['$home', 'C:\users\']
+cs = false
+
+
+
+[[questions]]
+
+number = 8
+py_on_begin = '''
+from pathlib import *
+tempdir = Path('C:/TEMP')
+if not tempdir.is_dir():
+    tempdir.mkdir()
+Path('C:/TEMP/report.html').write_text('<html><head></head><body><h1>This is an HTML report!</h1></body></html>')
+'''
+question = '''
+PowerShell saves the user's home directory (the user profile directory) in `$Home` to make it easy to reference. We can use the variable reference instead of typing out the whole path to the home directory.
+
+We've created a file `C:\TEMP\report.html`; copy it to your user profile directory by typing `Copy-Item C:\TEMP\report.html $Home`'''
+hint = 'Type `Copy-Item C:\TEMP\report.html $Home`; PowerShell will expand `$Home` to reflect your user profile directory.'
+answer = '`Copy-Item C:\TEMP\report.html $Home`'
+type = 'py'
+py = '''
+from pathlib import *
+ret = Path(f'{Path.home()}/report.html').is_file()
+'''
+
+
+[[questions]]
+
+number = 9
+question = '''
+Here we referenced the variable `$Home` in a command. It saved a little typing, and it demonstrates how we can leverage variables in everyday PowerShell tasks. Let's try another example.
+
+Type `Dog`, then press Enter.'''
+hint = 'Type `Dog`, then press Enter. It will produce an error on your screen.'
+answer = '`Dog`'
+type = 'str'
+str = ['is not recognized as the name of a cmdlet']
+
+
+
+[[questions]]
+
+number = 10
+question = '''
+When you ran `Dog` it returns an error since there is no PowerShell command called `Dog`. It also gives us the chance to inspect another automatic variable: `$Error`.
+
+Type `$Error` then press Enter.'''
+hint = 'Type `$Error` then press Enter. It display the history of errors for this PowerShell session.'
+answer = '`$Error`'
+type = 'str'
+str = ['is not recognized as the name of a cmdlet']
+
+
+
+[[questions]]
+
+number = 11
+question = '''
+The `$Error` automatic variable keeps track of all the times your commands generated an error for the current session. This is valuable since your custom PowerShell programs can reference error messages to provide help to users.
+
+We'll look at one more automatic variable: `$?`. First, run `Get-ChildItem -Name report.html`'''
+hint = 'Type `Get-ChildItem -Name report.html`, then press Enter.'
+answer = '`Get-ChildItem -Name report.html`'
+type = 'rgx'
+rgx = ['^report.html$']
+cs = false
+
+
+
+[[questions]]
+
+number = 12
+question = '''
+Great! We see the `report.html` file you copied earlier in this event.
+
+Next, type `$?` then press Enter.'''
+hint = 'Type `$?` then press Enter.'
+answer = '`$?`'
+type = 'str'
+str = ['$?', 'True']
+
+
+
+[[questions]]
+
+number = 13
+question = '''
+Notice how `$?` returns `True`. `True` is a Boolean data type; that is, it is either True or False. The `$?` variable indicates if the last command ran successfully. The output `True` here indicates that the `Get-ChildItem` command ran successfully.
+
+Let's look at another case: Type `Get-ChildItem -Name report.txt`, then press Enter.'''
+hint = 'Type `Get-ChildItem -Name report.txt`, then press Enter.'
+answer = '`Get-ChildItem -Name report.txt`'
+type = 'str'
+str = ['it does not exist.']
+
+
+[[questions]]
+
+number = 14
+question = '''
+Since `report.txt` does not exist, we see an error.
+
+Type `$?`, then press Enter.'''
+hint = 'Type `$?`, then press Enter.'
+answer = '`$?`'
+type = 'str'
+str = ['$?', 'False']
+
+
+[[questions]]
+
+number = 15
+question = '''
+Notice how the value of `$?` is now set to False. This tells us the previous command did not run successfully. This is valuable in PowerShell scripts to test if the previous command returned an error. PowerShell has other automatic variables as well, you can read about them by running `help about_Automatic_Variables`.
+
+Type `next` to continue.'''
+hint = 'Type `next` to continue.'
+answer = '`next`'
+type = 'str'
+str = ['wbEbIyVctYuOgDteiHvE']
+
+
+[[questions]]
+
+number = 16
+section = 'Assigning Variables'
+question = '''
+Next we'll look at creating and using our own variables. First, let's do a quick refresher on PowerShell process enumeration.
+
+Type `Get-Process`, then press Enter.'''
+hint = 'Type `Get-Process`, then press Enter.'
+answer = '`Get-Process`'
+type = 'str'
+str = ['Handles', 'NPM(K)', 'ProcessName', 'wininit']
+
+
+
+[[questions]]
+
+number = 17
+question = '''
+You may remember this from the PowerShell Olympics Using the Pipeline event. `Get-Process` retrieves a list of process details.
+
+Run the command again, this time creating a variable name `$processes` to store the process information by typing `$processes = Get-Process`, then press Enter.'''
+hint = 'Run `Get-Proces` again, this time preceding the command with `$processes =`. No pipeline is needed here!'
+answer = '`$processes = Get-Process`'
+type = 'str'
+str = ['$processes', '=', 'get-process']
+cs = false
+
+
+
+[[questions]]
+
+number = 18
+question = '''
+This time we don't see any output, but the data is stored in the `$processes` variable.
+
+Type `$processes` and press Enter.'''
+hint = 'Type `$processes` then press Enter.'
+answer = '`$processes`'
+type = 'str'
+str = ['$processes', 'Handles', 'NPM(K)', 'ProcessName', 'wininit']
+cs = false
+
+
+
+[[questions]]
+
+number = 19
+py_on_begin = '''
+# Start the rexplorer process
+import subprocess
+if (not 'rexplorer.exe' in (p.name() for p in psutil.process_iter())):
+    subprocess.Popen('data/rexplorer.exe', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+'''
+question = '''
+Here we see the process information that is very similar to when we ran `Get-Process` by itself. We can use variables to represent a point-in-time of the collected data. `$processes` reflects the processes running when we invoked the command, which may be different than the current process list details.
+
+Let's test this concept: declare a new process information variable: type `$pnow = Get-Process`, then press Enter.'''
+hint = 'Type `$pnow = Get-Process`, then press Enter.'
+answer = '`$pnow = Get-Process`'
+type = 'str'
+str = ['$pnow', '=', 'get-process']
+cs = false
+
+
+
+[[questions]]
+
+number = 20
+question = '''
+We can compare the `$processes` and `$pnow` variables using `Compare-Object`.
+
+Type `Compare-Object $processes $pnow`, then press Enter.'''
+hint = 'Type `Compare-Object $processes $pnow`, then press Enter.'
+answer = '`Compare-Object $processes $pnow`'
+type = 'str'
+str = ['InputObject', 'SideIndicator', 'System.Diagnostics.Process (rexplorer)']
+
+
+[[questions]]
+
+number = 21
+question = '''
+Notice how `Compare-Object` examines the two variables and shows us the differences? This is a powerful feature of PowerShell variables: they allow us to save a point-in-time representation of any object output, then compare it to another similar variable later.
+
+In the output of `Compare-Object` we see the `rexplorer` process is back. Type `$targetproc = Get-Process -Name rexplorer` then press Enter.'''
+hint = 'Type `$targetproc = Get-Process -Name rexplorer` then press Enter.'
+answer = '`$targetproc = Get-Process -Name rexplorer`'
+type = 'str'
+str = ['$targetproc', '=', 'Get-Process', '-Name', 'rexplorer']
+cs = false
+
+
+
+[[questions]]
+
+number = 22
+question = '''
+In this command we created a new variable, `$targetproc`. This is similar to the previous variables for process information, except this variable is limited to a specific process by name.
+
+Type `$targetproc` to examine the value of the variable, then press Enter.'''
+hint = 'Type `$targetproc`, then press Enter.'
+answer = '`$targetproc`'
+type = 'str'
+str = ['$targetproc', 'Handles', 'NPM(K)', 'ProcessName', 'rexplorer']
+cs = false
+
+
+
+[[questions]]
+
+number = 23
+question = '''
+Notice how this time the variable holds just the process information for `rexplorer`, corresponding to the `-Name` argument of the `Get-Process` command. We can continue to leverage the features of different PowerShell commands as needed to refine what is represented in the variable.
+
+Use the PowerShell pipeline to examine the members of the `$targetproc` variable with `Get-Member`.'''
+hint = 'Use the PowerShell pipeline with the `$targetproc`, sending the output of the variable to `Get-Member`.'
+answer = '`$targetproc | Get-Member`'
+type = 'str'
+str = ['ProductVersion', '$targetproc', 'Get-Member', 'TypeName: System.Diagnostics.Process']
+cs = false
+
+
+
+[[questions]]
+
+number = 24
+question = '''
+Scroll up a bit and examine some of the methods and properties associated with the object. Notice the `Kill()` method that can be invoked to kill the processes identified in the `$targetproc` variable. Methods for an object can be invoked using dot notation `ObjectName.Method()`.
+
+Invoke the `Kill()` method on the `$targetproc` variable to terminate the two processes using dot notation.'''
+hint = 'Use the `$targetproc` variable, adding `.Kill()` to the end of the varible name to invoke this method on all of the processes stored in the variable.'
+answer = '`$targetproc.Kill()`'
+type = 'py'
+py = '''
+import psutil
+ret = (not 'rexplorer.exe' in (p.name() for p in psutil.process_iter()))
+'''
+
+
+[[questions]]
+
+number = 25
+question = '''
+Nice work! :clap::clap::clap: By calling the `Kill()` method on the `$targetproc` variable you terminated both the rexplorer processes. You could have used the pipeline, sending the variable to `Stop-Process` as well; which one you choose is a matter of preference.
+
+Type `next` to continue.'''
+hint = 'Type `next` to continue.'
+answer = '`next`'
+type = 'str'
+str = ['TLvtPJkQdJpTljUSOYVd']
+
+
+
+[[questions]]
+
+number = 26
+section = 'PowerShell Types'
+question = '''
+Next we'll look at PowerShell variables and how they have different types. We're going to try and not make this a session on learning computer programming, though many of these concepts are programming-related. We'll try and keep this practical without getting too deeply into PowerShell programming concepts.
+
+Type `next` to continue.'''
+hint = 'Type `next` to continue.'
+answer = '`next`'
+type = 'str'
+str = ['SiLChruWbLEzXvPyQAII']
+
+
+
+[[questions]]
+
+number = 27
+question = '''
+Let's start by declaring a variable that represents a number.
+
+Type `$limit = 10`, then press Enter.'''
+hint = 'Type `$limit = 10`, then press Enter.'
+answer = '`$limit = 10`'
+type = 'str'
+str = ['$limit', '=', '10']
+cs = false
+
+
+
+[[questions]]
+
+number = 28
+question = '''
+Like everything in PowerShell, `$limit` is an object.
+
+Take a look at the members of this object by running `$limit | Get-Member`'''
+hint = 'Type `$limit | Get-Member`, then press Enter.'
+answer = '`$limit | Get-Member`'
+type = 'str'
+str = ['TypeName: System.Int32']
+
+
+
+[[questions]]
+
+number = 29
+question = '''
+At the top of this output look at the line starting with `TypeName`. When you declared the `$limit` variable with the value 10, PowerShell decided to use a type of Int32 (a 32-bit integer) to represent this data. The methods associated with this object are mostly for converting this to other types. Let's invoke one of those methods now.
+
+Type `$limit.GetType()` then press Enter.'''
+hint = 'Type `$limit.GetType()` then press Enter.'
+answer = '`$limit.GetType()`'
+type = 'str'
+str = ['IsPublic', 'IsSerial', 'Name', 'Int32']
+
+
+
+[[questions]]
+
+number = 30
+question = '''
+Similar to the output in the beginning of `Get-Member` we see that this variable is type Int32. You can use either `Get-Member` in the pipeline or the `GetType()` method with dot notation to look at the type information for a variable.
+
+PowerShell is a dynamically typed scripting language, which means that every variable has a type, but that variable type can change (it's dynamic). Let's experiment with that now: type `$limit = '100'` (with the quotation marks), then press Enter.'''
+hint = "Type `$limit = '100'`. Make sure you include the quotation marks around the `'100'`!"
+answer = "`$limit = '100'`"
+type = 'str'
+str = ['$limit', '=', "'100'"]
+cs = false
+
+
+[[questions]]
+
+number = 31
+question = '''
+Press the up arrow a few times, recalling the `$limit | Get-Member` command, then press Enter.'''
+hint = 'Use the command history to return to the last `Get-Member` command, or type `$limit | Get-Member`.'
+answer = '`$limit | Get-Member`'
+type = 'str'
+str = ['TypeName: System.String', 'int Length {get;}']
+
+
+
+[[questions]]
+
+number = 32
+question = '''
+If you scroll up again you'll see the type has changed. This time, `$limit` is a String type with different methods and properties. When you specify quotation marks around a value, PowerShell will treat it as a string. Numbers assigned to a variable without quotations will be assigned a type of Int32 or other numeric types depending on the number selected.
+
+Next, let's look at something cool and useful. Type `$limit = 100MB`, then press Enter.'''
+hint = 'Type `$limit = 100MB`, then press Enter.'
+answer = '`$limit = 100MB`'
+type = 'str'
+str = ['$limit', '=', '100MB']
+cs = false
+
+
+[[questions]]
+
+number = 33
+question = '''
+Press the up arrow twice and press Enter to get the members of the new `$limit` variable data.'''
+hint = 'Use the command history to return to the last `Get-Member` command, or type `$limit | Get-Member`.'
+answer = '`$limit | Get-Member`'
+type = 'str'
+str = ['TypeName: System.Int32', 'ToUInt64']
+
+
+
+[[questions]]
+
+number = 34
+question = '''
+Here we see that `$limit` is back to an Int32 type, but look at the value stored in `$limit`.
+
+Type `$limit`, then press Enter.'''
+hint = 'Type `$limit`, then press Enter.'
+answer = '`$limit`'
+type = 'str'
+str = ['$limit', '104857600']
+cs = false
+
+
+[[questions]]
+
+number = 35
+question = '''
+Instead of `$limit` having a value of 100, it has a value of 104857600, the number of bytes in 100 MB. PowerShell is designed to be "administrator first", with handy integer literals to interpret values including kilobytes, megabytes, gigabytes, terabytes, and petabytes.
+
+PowerShell can also work with converting hexadecimal and binary values using the prefix 0x or 0b. Change `$limit` to `0x31337` now.'''
+hint = 'Change the value of the `$limit` variable to 0x31337.'
+answer = '`$limit = 0x31337`'
+type = 'str'
+str = ['$limit', '=', '0x31337']
+cs = false
+
+
+[[questions]]
+
+number = 36
+question = '''
+Examine the value of `$limit`.'''
+hint = 'You can examine the value in the variable by typing the variable name. Type `$limit`, then press Enter.'
+answer = '`$limit`'
+type = 'str'
+str = ['$limit', '201527']
+cs = false
+
+
+
+[[questions]]
+
+number = 37
+question = '''
+This is a handy feature of PowerShell, and one that we can leverage as administrators when working with data.
+
+Next, let's look at another type: arrays. PowerShell arrays hold zero or more elements denoted by `@()` notation.
+
+Create a PowerShell array: type `$alpinecourses = @('Rock', 'Ice River', 'Rainbow')` then press Enter.'''
+hint = "Type `$alpinecourses = @('Rock', 'Ice River', 'Rainbow')` then press Enter."
+answer = "`$alpinecourses = @('Rock', 'Ice River', 'Rainbow')`"
+type = 'str'
+str = ['$alpinecourses', '@', 'Rock', 'Ice River', 'Rainbow', '(', ')']
+cs = false
+
+
+[[questions]]
+
+number = 38
+question = '''
+This array contains three names: Rock, Ice River, and Rainbow. You can access the individual array elements using an array subscript. That is, you can specify the offset number (starting at 0) for the object you want to access.
+
+Access the last element of the array. Type `$alpinecourses[2]`, then press Enter.'''
+hint = 'Type `$alpinecourses[2]`, then press Enter.'
+answer = '`$alpinecourses[2]`'
+type = 'str'
+str = ['Rainbow', '[2]', '$alpinecourses']
+cs = false
+
+
+
+[[questions]]
+
+number = 39
+question = '''
+Notice how we used the index `2`, which is the last element when we use offset indexing (starting at 0).
+
+Access the first element of the array.'''
+hint = 'The first element of an array is 0 when we use offset numbering. Type `$alpinecourses[0]`, then press Enter.'
+answer = '`$alpinecourses[0]`'
+type = 'str'
+str = ['Rock', '[0]', '$alpinecourses']
+cs = false
+
+
+[[questions]]
+
+number = 40
+question = '''
+Nice job! The array subscript reference mechanism is useful for other data types as well.
+
+Retrieve a list of the Windows services using `Get-Service`, saving it in a variable called `$services`.'''
+hint = 'Like we did for `Get-Process`, create a variable called `$services` to store the `Get-Service` command output.'
+answer = '`$services = Get-Service`'
+type = 'str'
+str = ['$services', '=', 'Get-Service']
+cs = false
+
+
+
+[[questions]]
+
+number = 41
+question = '''
+Call the `GetType()` method on the `$services` variable.'''
+hint = 'Like we did for the `$limit` variable, we can use dot notation to call a method on the variable. Type `$services.GetType()` to invoke the `GetType()` method on the `$services` variable.'
+answer = '`$services.GetType()`'
+type = 'str'
+str = ['$services.gettype', 'IsPublic', 'IsSerial', 'System.Array']
+cs = false
+
+
+
+[[questions]]
+
+number = 42
+question = '''
+The `$services` variable has a type of `Object[]`, but notice how the base type indicates that it is an array. We can use the array subscript notation to access different elements in this variable as well.
+
+Try it now. Access the service at index 10.'''
+hint = 'Like we did for the `$alpinecourses` array, we can access specific services using the array subscript notation. Type `$services[10]`, then press Enter.'
+answer = '`$services[10]`'
+type = 'str'
+str = ['$services[10]', 'Status', 'Name', 'DisplayName']
+cs = false
+
+
+
+[[questions]]
+
+number = 43
+question = '''
+We're uncovering a lot of the details in PowerShell now, but here's the main takeaway: lots of PowerShell collections of objects are actually arrays down deep, and we can use array subscript notation to access them. This can be the output of `Get-Service`, but also collections of processes, registry keys, file system objects, and lots more.
+
+Type `next` to continue.'''
+hint = 'Type `next` to continue.'
+answer = '`next`'
+type = 'str'
+str = ['EHHxcCmYOmYvelgDAeEV']
+
+
+
+[[questions]]
+
+number = 44
+question = '''
+We'll look at one more variable type: DateTime.
+
+Type `Get-Date | Get-Member`, then press Enter.'''
+hint = 'Type `Get-Date | Get-Member`, then press Enter.'
+answer = '`Get-Date | Get-Member`'
+type = 'str'
+str = ['TypeName: System.DateTime', 'ScriptProperty']
+
+
+
+[[questions]]
+
+number = 45
+question = '''
+The PowerShell `Get-Date` command returns a DateTime type which represents the date and time when you invoke the command. We can use this command to record a start and ending time for an operation (such as a long-running job). Let's do that now.
+
+Create two variables, `$start` and `$stop` using `Get-Date`, with a delay of 3 seconds between using `Start-Sleep 3`. We'll use the command separator `;` to run all three commands on one line. Type `$start = Get-Date ; Start-Sleep 3 ; $stop = Get-Date` then press Enter.'''
+hint = 'Type `$start = Get-Date ; Start-Sleep 3 ; $stop = Get-Date`, then press Enter. This will create two variables, `$start` and `$stop`.'
+answer = '`$start = Get-Date ; Start-Sleep 3 ; $stop = Get-Date`'
+type = 'str'
+str = ['$start', '=', 'Get-Date', 'Start-Sleep', '$stop']
+cs = false
+
+
+
+[[questions]]
+
+number = 46
+question = '''
+We can use arithmetic operators on these DateTime variables.
+
+Subtract `$stop` from `$start` to see the time difference: `$stop - $start`.'''
+hint = 'Type `$stop - $start` then press Enter.'
+answer = '`$stop - $start`'
+type = 'str'
+str = ['$start', '-', '$stop']
+cs = false
+
+
+[[questions]]
+
+number = 47
+question = '''
+The `TotalSeconds` property will show you the time delay between the two `Get-Date` commands, which will be just over 3 seconds. `Get-Date` will return the current date, but we can also specify an arbitrary date.
+
+Create a `$future` variable string of Feb. 8, 2030 at 9:00 AM (use MM/DD/YYYY or DD/MM/YYYY based on your regional convention; add a space after the year then 9:00 AM for the time).'''
+hint = 'Here you will create a variable called `$future` as a string using quotation marks. Enter the date for Feb. 8, 2030 using 02/08/2030 or 08/02/2030 depending on your regional convention.'
+answer = "`$future = '02/08/2030 9:00 AM'` (USA, India) or `$future = '08/02/2030 9:00 AM` (mostly everywhere else)"
+type = 'str'
+str = ['$future', '8', '2030', '9:00', 'AM']
+cs = false
+
+
+[[questions]]
+
+number = 48
+question = '''
+Try to subtract the `$start` object from `$future`.'''
+hint = 'Type `$future - $start`. This will generate an error.'
+answer = '`$future - $start`'
+type = 'str'
+str = ['Cannot convert value', 'to type "System.Int32"']
+
+
+[[questions]]
+
+number = 49
+question = '''
+We know that `$future` is a string object, since we declared it using quotes. We received an error because we can't perform arithmetic using a string and a DateTime object. We need to convert the string to a DateTime object using the ^cast operator^.
+
+Type `next` to continue.'''
+hint = 'Type `next` to continue.'
+answer = '`next`'
+type = 'str'
+str = ['rCynlamcVRSKqCnAzpKm']
+
+
+
+[[questions]]
+
+number = 50
+question = '''
+In PowerShell, you can specify a type in square brackets before the variable name to convert it to the specified type. Let's try that now.
+
+Type `[DateTime]$future`, then press Enter.'''
+hint = 'Type `[DateTime]$future`, then press Enter.'
+answer = '`[DateTime]$future`'
+type = 'str'
+# I'm matching as a collection of shorter strings since I'm not sure how other
+# locals will display this DateTime output.
+str = ['Friday', 'February', '8', '2030', '9:00:00 AM']
+
+
+[[questions]]
+
+number = 51
+question = '''
+Great! PowerShell converted the string in `$future` to a DateTime object.
+
+Press the up arrow several times to return to the subtraction operation and add a typecast to calculate the time span difference between `$future` and `$start`.'''
+hint = 'Return to the previous subtraction operation that generated an error. Type cast the `$future` variable by adding `[DateTime]` immediately before the variable name.'
+answer = '`[DateTime]$future - $start`'
+type = 'str'
+str = ['[DateTime]', 'Days', 'Hours', 'Minutes', 'Seconds']
+cs = false
+
+
+
+[[questions]]
+
+number = 52
+section = 'String Substitution'
+question = '''
+Nice job! :clap::clock3: There's one more concept on variables we need to cover: ^string substitution^. PowerShell can easily embed variables inside of strings. To practice this, create a variable called `$favcolor` with a value of `'gold'`.'''
+hint = "Create a variable called `$favcolor`. Assign it the value `'gold'` (with the quotes)."
+answer = "`$favcolor = 'gold'`"
+type = 'str'
+str = ['$favcolor', '=', 'gold']
+cs = false
+
+
+
+[[questions]]
+
+number = 53
+question = '''
+String substitution allows you to expand a variable within another string. This could be writing content to a file, as an argument to a PowerShell command, writing output to the screen or any other string functionality.
+
+Send a message to the console, using string substitution to expand the `$favcolor` variable. Type `Write-Host "My favorite color is $favcolor."`'''
+hint = 'Type `Write-Host "My favorite color is $favcolor."` You must use double quotes!'
+answer = '`Write-Host "My favorite color is $favcolor."`'
+type = 'str'
+str = ['My favorite color is gold']
+cs = false
+
+
+[[questions]]
+
+number = 54
+question = '''
+One important point to notice here is that string substitution requires the use of double quotes. Press the up arrow to recall the last command and change the double quotes to single quotes, then press Enter.'''
+hint = 'Recall the previous command by pressing the up arrow once. Change the double quotes to single quotes, then press Enter.'
+answer = "`Write-Host 'My favorite color is $favcolor.'`"
+type = 'str'
+str = ['My favorite color is $favcolor']
+cs = false
+
+
+
+[[questions]]
+
+number = 55
+question = '''
+Since you used single quotes, PowerShell did not expand the `$favcolor` variable. Sometimes you want this, such as when you are working with strings that contain dollar signs.
+The PowerShell convention for strings is this: use single quotes when you can, use double quotes when you must. If you are using string substitution, then use double quotes. If you are declaring a string as a variable without substitution, use single quotes. :yarn::thread:
+
+Type `next` then press Enter to continue.'''
+hint = 'Type `next` then press Enter to continue.'
+answer = '`next`'
+type = 'str'
+str = ['DLHDUriYPnjORrTOrBKU']
+
+
+
+[[questions]]
+
+number = 56
+question = '''
+Along with string substitution, we also have escape sequences in strings. The backtick `` ` `` character is used to indicate an escape sequence, followed by an escape sequence character. For example, `` `n `` is used to indicate a newline.
+
+Let's apply this. We can create a prompt to accept user input with ``Read-Host``. Type ``$age = Read-Host "Please enter your age.`nBe honest please"`` then press Enter. Enter a value when prompted, then press Enter.'''
+hint = 'Type ``$age = Read-Host "Please enter your age.`nBe honest please"`` then press Enter. Make sure you use double quotes to interpret `` `n `` as a newline character.'
+answer = '`$age = Read-Host "Please enter your age.`nBe honest please"`'
+type = 'str'
+str = ['Please enter your age.`nBe honest please', '$age']
+cs = false
+
+
+
+[[questions]]
+
+number = 57
+question = '''
+Here we used `` ` `` to indicate that a newline character should be inserted in the string. The ``Read-Host`` command prompts the user for input and saves it in the specified variable.
+Examine the contents of the ``$age`` variable to see your answer.'''
+hint = 'Type `$age` then press Enter.'
+answer = '`$age`'
+type = 'str'
+str = ['$age']
+cs = false
+
+
+
+[[questions]]
+
+number = 58
+question = '''
+Other escape sequences include `` `b `` to add a backspace character. Let's try something fun, type (or cut-and-paste) the following command, then press Enter.
+
+``For ($i = 9 ; $i -ne 0; $i--) { Write-Host -NoNewline "$i`b" ; Start-Sleep 1 }``'''
+hint = 'Type or cut-and-paste the command as shown starting with `For` and ending with `}`'
+answer = '``For ($i = 9 ; $i -ne 0; $i--) { Write-Host -NoNewline "`b" ; Start-Sleep 1 }``'
+type = 'str'
+str = ['for', '$i', 'write-host', 'nonewline', 'sleep']
+cs = false
+
+
+
+[[questions]]
+
+number = 59
+py_on_complete = '''
+# Cleanup
+from pathlib import *
+
+htmlreport = Path(f'{Path.home()}/report.html')
+if htmlreport.is_file():
+    htmlreport.unlink()
+'''
+question = '''
+In this command we created a countdown timer by declaring a variable ``$i``, using a ``For`` loop to continue decrementing the variable ``$i--`` until the value reaches zero. For each loop, the code in ``{}`` executes, using string substitution and the escape character to display the ``$i`` value, moving the cursor back to the beginning of the line (`` `b `` for a backspace), sleeping for 1 second each time. Neat! :clock230::clock530::clock830:
+
+Type ``next`` to finish.'''
+hint = 'Type `next` to finish.'
+answer = '`next`'
+type = 'str'
+str = ['VYGGvyTvfslNlFixpEAL']

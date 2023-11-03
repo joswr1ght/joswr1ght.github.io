@@ -1,0 +1,890 @@
+# vim: set wrap:
+psolympicsevent = 'Working with the Pipeline'
+psolympicsconf = 'C:/Tools/psolympics/psolympics.toml'
+openingmessage = '''
+^Welcome to the PowerShell Olympics!^ :1st_place_medal: :2nd_place_medal: :3rd_place_medal:
+
+In this event you will develop your skills working with the PowerShell pipeline.
+
+Enter the command `next` to continue.
+'''
+completionmessage = '''
+In this PowerShell Olympics event you explored several topics relating to the use of the pipeline in PowerShell. Some pipeline functionality is straightforward, such as sending output to the `more` command. Other pipeline functionality is more complex but also more powerful, such as chaining several pipeline commands together to take action on a host system.
+Practice using the pipeline in all of your PowerShell sessions!
+
+Congratulations! You have completed the PowerShell Olympic event!
+'''
+
+
+[[questions]]
+
+number = 1
+py_on_begin = '''
+# Gracefully clean up any remnants from a partially-completed event
+import os
+import psutil
+
+# If the work files already exists, rename it to {file}.save
+prefix = os.getenv('USERPROFILE')
+files = ['processes1.txt', 'processes2.txt', 'processes3.txt', 'processes4.txt', 'processes.csv',
+            'processes.html', 'malicious-processes.csv', 'malicious-processes.html']
+for file in files:
+    fqfile = f'{prefix}/{file}'
+    fqfilebak = f'{fqfile}.save'
+
+    try:
+        os.remove(fqfilebak)
+    except FileNotFoundError:
+        pass
+
+    if (os.path.exists(fqfile)):
+        os.rename(fqfile, fqfilebak)
+
+
+# If the rexplorer processes are running, stop them; remove the copies in TEMP after stopping
+processes = psutil.process_iter()
+for proc in processes:
+    if (proc.name() == 'KzSpbSjphHNFytkOGZrD.exe'
+                or proc.name() == 'KzSpbSjphHNFytkOGZrD.exe'
+                or proc.name() == 'wvHReTpJFREGixSelsXT.exe'
+                or proc.name() == 'rexplorer.exe'):
+        proc.kill()
+
+mw = [f'{os.getenv("TEMP")}/KzSpbSjphHNFytkOGZrD.exe',
+            f'{os.getenv("TEMP")}/wvHReTpJFREGixSelsXT.exe',
+            f'C:/temp/wOZRKiofpYmEfqCLShBx.exe']
+for m in mw:
+    try:
+        os.remove(m)
+    except (FileNotFoundError, PermissionError):
+        pass
+'''
+question = '''
+The PowerShell pipeline is an integral feature of PowerShell, allowing us to stack multiple PowerShell commands together to achieve complex goals.
+
+Let's start with a straightforward command. Type `Get-Service`, then press Enter.'''
+hint = 'Type `Get-Service`, then press Enter.'
+answer = '`Get-Service`'
+type = 'str'
+str = ['Running', 'Stopped', 'Status']
+
+
+
+[[questions]]
+
+number = 2
+question = '''
+The `Get-Service` cmdlet allow us to interrogate the services running on the Windows system. There are a lot of services though, so it can be difficult to catch all of the output.
+
+Let's look at building a simple pipeline. Press the up arrow to recall the `Get-Service` command. At the end of the line add a space followed by `| more`, then press Enter. Scroll through the output by pressing the spacebar multiple times until you return to the prompt.'''
+hint = 'Type `Get-Service | more`, then press Enter. Press space multiple times to see the service list and return to the prompt.'
+answer = '`Get-Service | more`'
+type = 'str'
+str = ['|', 'more']
+cs = false
+
+
+[[questions]]
+
+number = 3
+question = '''
+In the previous command you created a pipeline - the `Get-Service` cmdlet sent data through the pipe `|` to the `more` command. The `more` command shows the output one screenful at a time, allowing us to display the output of `Get-Service` without scrolling.
+
+The pipeline is a tremendously valuable feature, and you will use it in most of your PowerShell session. Type `next` to continue, then press Enter.'''
+hint = 'Type `next`, then press Enter.'
+answer = '`next`'
+type = 'str'
+str = ['AXjZBjLouusnlfAnVRKr']
+
+
+[[questions]]
+
+number = 4
+question = '''
+Let's take a look at another cmdlet that is useful in the pipeline: `Sort-Object`. When you ran `Get-Service`, it displays the services in service name order, alphabetically sorted. The `Sort-Object` cmdlet allows you to change the sort order.
+
+Use `Sort-Object` as a pipeline command to change the sort order of the `Get-Service` output to alphabetically descending. Type `Get-Service | Sort-Object -Descending`, then press Enter.'''
+hint = 'Type `Get-Service | Sort-Object -Descending`, then press Enter.'
+answer = '`Get-Service | Sort-Object -Descending`'
+type = 'str'
+str = ['Running', 'Stopped', 'Status', 'escending'] # Case-insensitive candidate
+
+
+[[questions]]
+
+number = 5
+question = '''
+The pipeline is not limited to a single pipe -- you can add as many pipe as needed!
+
+Press the up arrow to recall the previous command, then add a 2nd pipe followed by the `more` command.'''
+hint = 'Run `Get-Service | Sort-Object -Descending | more`'
+answer = '`Get-Service | Sort-Object -Descending | more`'
+type = 'str'
+str = ['Service', 'Object', 'Descending', 'more']
+cs = false
+
+
+
+[[questions]]
+
+number = 6
+question = '''
+The pipeline is valuable for more than just `Get-Service`. We can create pipelines to process the output of other commands as well.
+
+Use create a pipeline to sort the output of `Get-Process` by name. Type `Get-Process | Sort-Object -Property Name`, then press Enter.'''
+hint = 'Type `Get-Process | Sort-Object -Property Name`, then press Enter.'
+answer = '`Get-Process | Sort-Object -Property Name`'
+type = 'str'
+str = ['Handles', 'NPM(K)', '-------', 'name']
+cs = false
+
+
+[[questions]]
+
+number = 7
+question = '''
+In this output we see that `Sort-Object` has sorted the output by the `Name` property. You can also sort by process ID using the `Id` property.
+
+Press the up arrow to recall the previous command. Retrieve the process information, sorted by process ID.'''
+hint = 'Change the previous command to sort by process ID by changing `Name` to `Id`'
+answer = '`Get-Process | Sort-Object -Property Id`'
+type = 'str'
+str = ['Handles', 'NPM(K)', '-------', 'Id']
+cs = false
+
+
+[[questions]]
+
+number = 8
+question = '''
+`Sort-Object` can also make the output unique. This can be useful to identifying the name of each item, eliminating duplicates.
+
+Retrieve the process list again, sorting by name in alphabetically descending order. Add the `-Unique` argument to make the list of processes unique.'''
+hint = 'This question asks you to combine multiple parameters from previous questions. Type `Get-Process`, then create a pipeline for `Sort-Object` using the `-Property name`, `-Descending`, and `-Unique` parameter options.'
+answer = '`Get-Process | Sort-Object -Property name -Descending -Unique`'
+type = 'str'
+str = ['Handles', 'NPM(K)', '-------', 'unique', 'descending']
+cs = false
+
+
+[[questions]]
+
+number = 9
+question = '''
+`Sort-Object` is a useful cmdlet often used in the PowerShell pipeline to change the default sort order of the data from a previous command in the pipeline. We'll continue to use it in later tasks for this event.
+
+Type `next` then press Enter to continue.'''
+hint = 'Type `next` then press Enter to continue.'
+answer = '`next`'
+type = 'str'
+str = ['XJDfAxhxhztIIYkKVcvr']
+
+
+[[questions]]
+
+number = 10
+question = '''
+Like other shells, PowerShell supports redirection operators such as `>` to send the output of the pipeline to a file.
+
+Run the PowerShell `Get-Process`, redirecting the output to a file in the default user profile directory called `processes1.txt`'''
+hint = 'Make sure you are in your user profile directory (`cd $env:userprofile`) then run `Get-Process > processes1.txt`'
+answer = '`Get-Process > processes1.txt`'
+type = 'py'
+py = '''
+import os
+ret = os.path.exists(f'{os.getenv("USERPROFILE")}/processes1.txt')
+'''
+
+
+[[questions]]
+
+number = 11
+question = '''
+The redirection operator `>` allows us to create a file with the output of the pipeline, but we have little flexibility in defining the format of the file. This is where the cmdlet `Out-File` is useful.
+
+Press the up arrow to recall the previous command. Instead of using the redirection operator, create a pipeline after `Get-Process` adding `Out-File -FilePath processes2.txt`'''
+hint = 'Type `Get-Process | Out-File -FilePath processes2.txt`, then press Enter.'
+answer = '`Get-Process | Out-File -FilePath processes2.txt`'
+type = 'py'
+py = '''
+import os
+ret = os.path.exists(f'{os.getenv("USERPROFILE")}/processes2.txt')
+'''
+
+
+[[questions]]
+
+number = 12
+question = '''
+When you use the redirection operator `>` or `Out-File`, PowerShell takes the pipeline output and creates a little-endian UTF-16 unicode text file with a Byte Order Mark (BOM) at the beginning of the file. That is, these look like text files, but they aren't plain ASCII files.
+
+To create a plain ASCII text file, use `Out-File` with the parameter `-Encoding ASCII`. Run the previous command again, this time creating an ASCII file called `processes3.txt`'''
+hint = 'Run `Get-Process | Out-File -FilePath processes3.txt -Encoding ASCII`'
+answer = '`Get-Process | Out-File -FilePath processes3.txt -Encoding ASCII`'
+type = 'py'
+py = '''
+import os
+ret = False
+filename = f'{os.getenv("USERPROFILE")}/processes3.txt'
+if os.path.exists(filename):
+    with open(filename) as f:
+        if f.read(8) == '\nHandles':
+            ret = True
+'''
+
+
+[[questions]]
+
+number = 13
+question = '''
+It can be hard to visually see the differences in these files, but the size difference will be apparent.
+
+Run `Get-ChildItem processes*.txt` to see the sizes of the three files.'''
+hint = 'Type `Get-Childitem processes*.txt` to see the three output files.'
+answer = '`Get-ChildItem processes*.txt`'
+type = 'str'
+str = ['Mode', 'LastWriteTime', 'processes1', 'processes2', 'processes3']
+
+
+
+[[questions]]
+
+number = 14
+question = '''
+Notice how the third file (the ASCII file) is approximately half the size of the other two. This is because UTF-16 format requires two bytes per ASCII character.
+
+Examine the first several lines of the `processes3.txt` file. Type `Get-Content -Path processes3.txt -First 5`, then press Enter.'''
+hint = 'Type `Get-Content -Path processes3.txt -First 5` to retrieve content from the `pocesses3.txt` file in the current directory, limiting the output to the first 5 lines.'
+answer = '`Get-Content -Path processes3.txt -First 5`'
+type = 'str'
+str = ['Handles', 'NPM(K)', 'First']
+cs = false
+
+
+[[questions]]
+
+number = 15
+question = '''
+No surprise here, the content of `processes3.txt` is just like what we saw when we ran `Get-Process` output in the terminal. Adding `Out-File` just redirects the output to a file.
+
+What if you want the output to go to the screen and go to a file? This is the job of the `Tee-Object` cmdlet and the PowerShell pipeline. Type `Get-Process | Tee-Object -FilePath processes4.txt`, then press Enter.'''
+hint = 'Type `Get-Process | Tee-Object -FilePath processes4.txt`, then press Enter.'
+answer = '`Get-Process | Tee-Object -FilePath processes4.txt`'
+type = 'py'
+py = '''
+import os
+if os.path.exists(f'{os.getenv("USERPROFILE")}/processes4.txt'):
+    ret = True
+else:
+    ret = False
+'''
+
+
+[[questions]]
+
+number = 16
+question = '''
+Nice work! `Tee-Object` duplicated the output of `Get-Process`, showing it on the screen and saving it to `processes4.txt`
+
+PowerShell also supports other output mechanisms, such as `Export-Csv`. Create a list of processes, sending the output to the pipeline with `Export-Csv -Path processes.csv`.
+NOTE: This command will take 3-5 minutes to complete. This is a good time to stretch or get a drink!'''
+hint = 'Continue to use `Get-Process`, this time sending the output to `Export-Csv -Path processes.csv` through the pipeline.'
+answer = '`Get-Process | Export-Csv -Path processes.csv`'
+type = 'py'
+py = '''
+import os
+ret = False
+filename = f'{os.getenv("USERPROFILE")}/processes.csv'
+if os.path.exists(filename):
+    with open(filename) as f:
+        fc = f.read()
+        ret = (fc[0:32] == "#TYPE System.Diagnostics.Process"
+                and "winlogon" in fc)  # Checking for winlogin ensures the job is almost done, alphabetically
+'''
+
+
+[[questions]]
+
+number = 17
+question = '''
+Welcome back! `Export-Csv` took the output of `Get-Process` and converted it into a CSV file, allowing us to process the data with other tools.
+
+Take a look at the first several lines of `processes.csv` using `Get-Content`. Limit the output to the first 5 lines.'''
+hint = 'Remember the `Get-Content` command we used previously? Type `Get-Content -Path processes.csv -First 5` to retrieve content from the `pocesses.csv` file.'
+answer = '`Get-Content -Path processes.csv -First 5`'
+type = 'str'
+str = ['#TYPE System.Diagnostics.Process', 'CPU', 'FileVersion']
+
+
+[[questions]]
+
+number = 18
+question = '''
+This is a lot more information than what we saw when we used `Get-Process | Out-File`. Earlier we saw 8 columns of information but the CSV file has over 60 columns!
+This highlights an important concept about the PowerShell pipeline: PowerShell passes ^objects^ in the pipeline, not just text. An object is a collection of code (methods) and data properties that represents the item.
+Type `next` then press Enter to continue.'''
+hint = 'Type `next` then press Enter to continue.'
+answer = '`next`'
+type = 'str'
+str = ['eyBMTllqOIbihOzYwukT']
+
+
+[[questions]]
+
+number = 19
+question = '''
+This is an important concept. When you run a PowerShell command and send the output in a pipeline, you are sending an object or a collection of objects to the next step in the pipeline. These objects can include more information than what you see by default.
+
+Using PowerShell, we can retrieve the information that is important to us using different commands. Let's try it now. Type `Get-Process -Name lsass | Select-Object -Property *`, then press Enter.'''
+hint = 'Type `Get-Process -Name lsass | Select-Object -Property *`, then press Enter.'
+answer = '`Get-Process -Name lsass | Select-Object -Property *`'
+type = 'str'
+str = ['Name', 'lsass', 'Container', 'ProcessName']
+cs = false
+
+
+
+[[questions]]
+
+number = 20
+question = '''
+In this command we used `Get-Process` to get information about the lsass process, adding a new command to the pipeline: `Select-Object`. `Select-Object` is used to select objects or the properties of objects in the pipeline.
+
+When we use `Select-Object -Property *` we see a lot of extra fields that we didn't see when we ran `Get-Process` by itself. This is the PowerShell pipeline in action: the object sent by `Get-Process` has all of this data; we decide what to do with it using commands on the right of the pipeline. Type `next` then press Enter to continue.'''
+hint = 'Type `next` then press Enter to continue.'
+answer = '`next`'
+type = 'str'
+str = ['iYXHjQKhVzJfolKljdXz']
+
+
+[[questions]]
+
+number = 21
+py_on_begin = '''
+import shutil
+import psutil
+import subprocess
+import os
+dstfile = f'{os.getenv("TEMP")}/rexplorer.exe'
+if not os.path.exists(dstfile):
+    shutil.copyfile('data/rexplorer.exe', dstfile)
+if (not 'rexplorer.exe' in (p.name() for p in psutil.process_iter())):
+    subprocess.Popen(dstfile, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+'''
+question = '''
+Let's continue to investigate the properties available from `Get-Process` by using the pipeline. We've launched a new process for you to evaluate: `rexplorer`. This is a benign process, but you could imagine it is a piece of malware you need to evaluate.
+
+Use `Get-Process` to collect the default properties for the `rexplorer` process.'''
+hint = 'Run `Get-Process`, supplying the name of the target process.'
+answer = '`Get-Process -Name rexplorer`'
+type = 'str'
+str = ['Handles', 'ProcessName', 'rexplorer']
+cs = false
+
+
+
+[[questions]]
+
+number = 22
+question = '''
+`Get-Process` shows some information, but let's gather more data. Let's examine summary information about the object returned by `Get-Process` using the PowerShell pipeline.
+
+Run `Get-Process -Name rexplorer | Measure-Object`'''
+hint = 'Type `Get-Process -Name rexplorer | Measure-Object`, then press Enter.'
+answer = '`Get-Process -Name rexplorer | Measure-Object`'
+type = 'str'
+str = ['Count', 'Average', 'Property']
+
+
+[[questions]]
+
+number = 23
+question = '''
+`Measure-Object` returns information about the numeric properties of the objects received in the pipeline. In this example, `Measure-Object` tells us that there are 2 objects in the pipeline, corresponding to the two instances of the rexplorer process. We'll return to `Measure-Object` when we look at file processing.
+
+Next, let's look at the object members. Run `Get-Process -Name rexplorer | Get-Member`'''
+hint = 'Press the up arrow to recall the previous command. Change `Measure-Object` to `Get-Member`, then press Enter.'
+answer = '`Get-Process -Name rexplorer | Get-Member`'
+type = 'str'
+str = ['ProductVersion', 'TypeName: System.Diagnostics.Process']
+
+
+
+[[questions]]
+
+number = 24
+question = '''
+`Get-Member` returns information about the object properties and methods received in the pipeline. For `Get-Process`, we see lots of interesting properties about the processes, but no values.
+
+To see the values and the property names, run `Get-Process -Name rexplorer | Select-Object -First 1 -Property *`'''
+hint = 'Press the up arrow to recall the previous command. Change `Get-Member` to Select-Object -First 1 -Property *`, then press Enter.'
+answer = '`Get-Process -Name rexplorer | Select-Object -First 1 -Property *`'
+type = 'str'
+str = ['Name', 'Id', 'System.Diagnostics.ProcessModule (rexplorer.exe)'] # this last element is MainModule's value
+
+
+
+[[questions]]
+
+number = 25
+question = '''
+In the previous command we used `Select-Object` to get a list of the properties available, limiting it to the first object returned with `-First 1` to avoid repeating the output for the two rexplorer processes. In this output we see the same property names that we saw with `Get-Member`, but we can also see the values for the first object.
+
+This type of analysis is called introspection: the ability to examine properties of an object at runtime. We'll use `Get-Member` and `Select-Object -Property *` often to see which properties are available when working with PowerShell objects.
+Type `next`, then press Enter to continue.'''
+hint = 'Type `next`, then press Enter to continue.'
+answer = '`next`'
+type = 'str'
+str = ['VxPXotdEFtYmQikbxSwU']
+
+
+
+[[questions]]
+
+number = 26
+question = '''
+Let's retrieve specific properties about the rexplorer process using `Select-Object`. Instead of using `-Property *`, we can specify a comma-separated list of properties that we want to see.
+
+Run `Get-Process -Name rexplorer | Select-Object -Property Name, Id, Path` to get the process name, process ID, and process path information.'''
+hint = 'Type `Get-Process -Name rexplorer | Select-Object -Property Name, Id, Path`, then press Enter.'
+answer = '`Get-Process -Name rexplorer | Select-Object -Property Name, Id, Path`'
+type = 'str'
+str = ['Name', 'Id', 'Path', 'rexplorer', 'Temp']
+cs = false
+
+
+[[questions]]
+
+number = 27
+question = '''
+By examining the list of properties returned by `Get-Process` using `Get-Member` or `Select-Object -Property *`, we can customize the output using the properties that interest us.
+
+Repeat the last command by pressing the up arrow, then add two additional properties: `CPU` and `WorkingSet64`'''
+hint = 'Press the up arrow to recall the previous command. Add two additional properties to the end of the list of properties: `CPU` and `WorkingSet64`, separated by a comma.'
+answer = '`Get-Process -Name rexplorer | Select-Object -Property Name, Id, Path, CPU, WorkingSet64`'
+type = 'str'
+str = ['Name', 'Id', 'Path', 'rexplorer', 'Temp', 'CPU', 'WorkingSet64']
+cs = false
+
+
+[[questions]]
+
+number = 28
+question = '''
+In this command we added additional fields to display with `Select-Object`. Notice how the display changed from table format to list format? `Select-Object` has a rule: 5 or more properties are shown in a list. Fortunately, we can add another element to the pipeline to return to table view: `Format-Table`.
+
+Press the up arrow to recall the previous command and extend the pipeline, adding `Format-Table` as the last element.'''
+hint = 'In this step you will add a new command to the pipeline. Press the up arrow to recall the previous `Get-Process` command, then continue the pipeline with `|` and `Format-Table`'
+answer = '`Get-Process -Name rexplorer | Select-Object -Property Name, Id, Path, CPU, WorkingSet64 | Format-Table`'
+type = 'str'
+str = ['------------', 'Name', 'Id', 'Path', 'rexplorer', 'Temp', 'CPU', 'WorkingSet64'] # The -- are for the WorkingSet64 column separator
+
+
+
+[[questions]]
+
+number = 29
+question = '''
+Many of the associated PowerShell nouns work together in a pipeline. You can use a PowerShell command such as `Get-Process`, then stop the target process by adding `Stop-Process` to the pipeline with no parameters.
+
+Type `Get-Process -Name rexplorer | Stop-Process` then press Enter to terminate the rexplorer processes.'''
+hint = 'Type `Get-Process -Name rexplorer | Stop-Process` then press Enter.'
+answer = '`Get-Process -Name rexplorer | Stop-Process`'
+type = 'py'
+py = '''
+import psutil
+ret = (not 'rexplorer.exe' in (p.name() for p in psutil.process_iter()))
+'''
+
+
+[[questions]]
+
+number = 30
+question = '''
+Nicely done! You've terminated the rexplorer processes.
+
+Type `next` then press Enter to continue.'''
+hint = 'Type `next` then press Enter to continue.'
+answer = '`next`'
+type = 'str'
+str = ['BUZNccsesayhsZIzVMsb']
+
+
+
+[[questions]]
+
+number = 31
+question = '''
+Since PowerShell is designed around the concept of using a pipeline, there are lots of cmdlets that allow us to leverage this functionality. We can take the output of `Get-Process` and export the results to an HTML report using `ConvertTo-HTML`, for example.
+
+Run `Get-Process | Select-Object -Property Name, Id, Path, CPU, WorkingSet64 | ConvertTo-Html | Out-File processes.html` to create an HTML report of all running processes, saving the output as `processes.html`'''
+hint = 'Type `Get-Process | Select-Object -Property Name, Id, Path, CPU, WorkingSet64 | ConvertTo-Html | Out-File processes.html`, then press Enter.'
+answer = '`Get-Process | Select-Object -Property Name, Id, Path, CPU, WorkingSet64 | ConvertTo-Html | Out-File processes.html`'
+type = 'py'
+py = '''
+import os
+ret = os.path.exists(f'{os.getenv("USERPROFILE")}/processes.html')
+'''
+
+
+[[questions]]
+
+number = 32
+question = '''
+Good work! You can open the HTML report using your default browser by running `Start-Process processes.html`. Do that now to look at the process report you created.
+
+When you are finished, close the browser and run `next` to continue.'''
+hint = 'Type `Start-Process processes.html`, then press Enter to open the report. Close the browser after looking at the report, then type `next` and press Enter to continue.'
+answer = '`Start-Process processes.html`, then `next`'
+type = 'str'
+str = ['gAUSFswmAKHICoaaaYuM']
+
+
+[[questions]]
+
+number = 33
+question = '''
+Once you understand the concepts around PowerShell pipelines, it can be applied to lots of different functionality. For example, we can get basic information about the Event Log service by running `Get-Service -Name eventlog`
+
+Type `Get-Service -Name eventlog`, then press Enter.'''
+hint = 'Type `Get-Service -Name eventlog`, then press Enter.'
+answer = '`Get-Service -Name eventlog`'
+type = 'str'
+str = ['Running', 'Windows Event Log']
+
+
+
+[[questions]]
+
+number = 34
+question = '''
+Press the up arrow to recall the previous command. Use `Select-Object` in a pipeline to retrieve the following fields about the Event Log service: `Status`, `Name`, `DisplayName`, and `StartType`'''
+hint = 'Press the up arrow to recall the `Get-Service -Name eventlog` command. Create a pipeline, adding `Select-Object -Property Status, Name, DisplayName, StartType`, then press Enter'
+answer = '`Get-Service -Name eventlog | Select-Object -Property Status, Name, DisplayName, StartType`'
+type = 'str'
+str = ['StartType', 'Automatic']
+
+
+
+[[questions]]
+
+number = 35
+question = '''
+Like we did with `Get-Process`, you added an additional field of information (`StartType`) to the output.
+
+Next, use the pipeline to add an additional field to the display for `Get-Service -Name eventlog`, reporting information about the service dependencies associated with the service.'''
+hint = 'First you need to figure out what the service dependencies field is called. Run `Get-Service -name EventLog | Select-Object -Property *` to get a list of the properties, then add the `DependentServices` field to the earlier list of properties.'
+answer = '`Get-Service eventlog | Select-Object -Property Status, Name, DisplayName, StartType, DependentServices`'
+type = 'str'
+str = ['DependentServices', 'uhssvc']
+
+
+[[questions]]
+
+number = 36
+question = '''
+Good work! Run that command again, this time exporting the 5 fields into a CSV file named `processes.csv`'''
+hint = 'Press the up arrow to recall the previous command. Then, extend the pipeline adding `Export-Csv -Path processes.csv`. Make sure you are still in your user profile directory (`cd $env:userprofile`).'
+answer = '`Get-Service eventlog | Select-Object -Property Status, Name, DisplayName, StartType, DependentServices | Export-Csv -Path processes.csv`'
+type = 'py'
+py = '''
+import os
+ret = os.path.exists(f'{os.getenv("USERPROFILE")}/processes.csv')
+'''
+
+
+[[questions]]
+
+number = 37
+question = '''
+Press the up arrow to recall that command, then display the results in a table format (removing the CSV export).'''
+hint = '`Select-Object` displays output in a list when 5 or more properties are displayed. Add `Format-Table` to the pipeline (removing the `Export-Csv` first) to display the information in a table.'
+answer = '`Get-Service eventlog | Select-Object -Property Status, Name, DisplayName, StartType, DependentServices | Format-Table`'
+type = 'str'
+str = ['DependentServices', '-----------------']
+
+
+[[questions]]
+
+number = 38
+question = '''
+Great work!
+
+So far we've started out pipeline examples with `Get-Process` and `Get-Service`, but that doesn't have to be the start of the pipeline. Examine the status of the WinRM service: type `'winrm' | Get-Service` then press Enter.'''
+hint = "Type `'winrm' | Get-Service` then press Enter. The quotation marks around `winrm` aren't required, but it's a good idea to include them."
+answer = "`'winrm' | Get-Service`"
+type = 'str'
+str = ['DisplayName', 'Windows Remote Management']
+
+
+[[questions]]
+
+number = 39
+question = '''
+In the previous command we created a string object `'winrm'` as the input to the `Get-Service` cmdlet. Using a pipeline in this manner is known as parameter binding, where a PowerShell command matches the input you supply in the pipeline to a designated parameter. `'winrm'` is a string, but in the pipeline it becomes an object. Type `'winrm' | Get-Member` to see all of the string properties.'''
+hint = "Type `'winrm' | Get-Member`"
+answer = "`'winrm' | Get-Member`"
+type = 'str'
+str = ['TypeName: System.String']
+
+
+
+[[questions]]
+
+number = 40
+question = '''
+Most of these elements are methods that perform an action on the string. This starts to exceed the focus of this event, but the important point is this: everything in the pipeline is an object, and PowerShell commands can act upon it. Type `next` then press Enter to continue.'''
+hint = 'Type `next`, then press Enter to continue.'
+answer = '`next`'
+type = 'str'
+str = ['DEudCDKYVDtewbmOGfFJ']
+
+
+
+[[questions]]
+
+number = 41
+py_on_begin = '''
+import os
+services = 'wuauserv\nxblgamesave\nwinrm\nspooler\nnetlogon'
+filename = f'{os.getenv("USERPROFILE")}/services.txt'
+with open(filename, 'w') as f:
+    f.write(services)
+'''
+question = '''
+One of the most useful elements in PowerShell parameter binding is integrating content from files. We've created a file called `services.txt`. Look at the contents of the file by typing `Get-Content -Path services.txt`, then press Enter.'''
+hint = 'Type `Get-Content -Path services.txt`, then press Enter.'
+answer = '`Get-Content -Path services.txt`'
+type = 'str'
+str = ['wuauserv', 'netlogon']
+
+
+
+[[questions]]
+
+number = 42
+question = '''
+This file has several services listed. We can quickly interrogate all of the services by leveraging PowerShell parameter binding in the pipeline.
+
+Press the up arrow to recall the previous `Get-Content` command, then add `Get-Service` to the pipeline.'''
+hint = 'Press the up arrow to recall the `Get-Content -Path services.txt` command. Create a pipeline, sending the output to `Get-Service`'
+answer = '`Get-Content -Path services.txt | Get-Service`'
+type = 'str'
+str = ['Windows Update', 'Print Spooler']
+
+
+
+[[questions]]
+
+number = 43
+question = '''
+Here we can integrate a separate data source (a file with multiple service names, one per line) into PowerShell to query them all using the pipeline. Neat!
+
+Type `next` then press Enter to continue.'''
+hint = 'Type `next` then press Enter to continue.'
+answer = '`next`'
+type = 'str'
+str = ['pvZRkZspMgzmtpLuhVCA']
+
+
+
+[[questions]]
+
+number = 44
+py_on_begin = '''
+import shutil
+import psutil
+import subprocess
+import os
+dstfile = f'{os.getenv("TEMP")}/rexplorer.exe'
+if not os.path.exists(dstfile):
+    shutil.copyfile('data/rexplorer.exe', dstfile)
+
+if (not 'rexplorer.exe' in (p.name() for p in psutil.process_iter())):
+    subprocess.Popen(dstfile, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+'''
+question = '''
+Parameter binding in PowerShell pipelines is useful, but not all PowerShell commands support this feature in the same manner.
+
+We started the `rexplorer` process again. Try to stop it using paramter binding and a string. Type `'rexplorer' | Stop-Process`, then press Enter.'''
+hint = "Type `'rexplorer' | Stop-Process`, then press Enter."
+answer = "`'rexplorer' | Stop-Process`"
+type = 'str'
+str = ['The input object cannot be bound to any parameters for the command']
+
+
+[[questions]]
+
+number = 45
+question = '''
+`Stop-Process` returns an error here, not because it doesn't support parameter binding (it does), but because it can't accept a string as the default parameter. However, you can build a pipeline starting with `Get-Process -Name rexplorer`, followed by `Stop-Process`. Do that now to stop the `rexplorer` process.'''
+hint = "This will be a two-part pipeline: first, `Get-Process -Name 'rexplorer'`, then `Stop-Process`"
+answer = "`Get-Process -Name 'rexplorer' | Stop-Process`"
+type = 'py'
+py = '''
+import psutil
+ret = (not 'rexplorer.exe' in (p.name() for p in psutil.process_iter()))
+'''
+
+
+[[questions]]
+
+number = 46
+question = '''
+Let's finish up our look at using the PowerShell pipeline with one more valuable cmdlet: `Where-Object`. `Where-Object` performs an action on each object in the collection. This is often used for filtering results in the pipeline.
+
+Get a list of running services using `Where-Object` by typing `Get-Service | Where-Object -Property Status -EQ Running`, then press Enter.'''
+hint = 'Type `Get-Service | Where-Object -Property Status -EQ Running`, then press Enter'
+answer = '`Get-Service | Where-Object -Property Status -EQ Running`'
+type = 'str'
+str = ['property', 'status', 'running', 'where-object']
+cs = false
+
+
+[[questions]]
+
+number = 47
+question = '''
+In this example we used `Where-Object` to examine the Status property for each object in the collection, only returning the object when the Status is equal to (`-EQ`) `Running`. You can also use the `-Like` operator to do partial string matching.
+
+Type `Get-Service | Where-Object -Property DisplayName -Like 'Application*'` then press Enter.'''
+hint = "Type `Get-Service | where-object -Property DisplayName -Like 'Application*'` then press Enter."
+answer = "`Get-Service | where-object -Property DisplayName -Like 'Application*'`"
+type = 'str'
+str = ['Stopped', 'Running', 'DisplayName', 'application']
+cs = false
+
+
+[[questions]]
+
+number = 48
+py_on_begin = '''
+import shutil
+import psutil
+import subprocess
+import os
+mw = [f'{os.getenv("TEMP")}/KzSpbSjphHNFytkOGZrD.exe',
+        f'{os.getenv("TEMP")}/wvHReTpJFREGixSelsXT.exe',
+        f'C:/temp/wOZRKiofpYmEfqCLShBx.exe']
+if not os.path.exists('C:/temp'):
+    os.mkdir('C:/temp')
+try:
+    for m in mw:
+        shutil.copyfile('data/rexplorer.exe', m)
+        subprocess.Popen(m, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+except PermissionError:
+    pass
+'''
+question = '''
+Here we use the wildcard character to display only the services whose description starts with the word Application. We can apply this to other cmdlets as well, using any property for filtering. For example, you can use the `Path` property of a process to detect all processes running out of a `temp` directory.
+
+Use `Get-Process` to identify all processes running from a path that includes the string `temp`.'''
+hint = 'For this command you will use `Get-Process` to get the process list. Use `Where-Object` again with the `Path` property for the executable path. Since the `temp` directory string is anywhere within the path, use `-Like *temp*` to match any path with a directory that includes `temp` in the name.'
+answer = "`Get-Process | Where-Object -Property Path -Like '*temp*'`"
+type = 'str'
+str = ['KzSpbSjphHNFytkOGZrD', 'wvHReTpJFREGixSelsXT', 'wOZRKiofpYmEfqCLShBx', '*temp*', '-Property', 'Path']
+cs = false
+
+
+
+[[questions]]
+
+number = 49
+question = '''
+Here we identifed all processes running from a directory with temp anywhere in the name. This is useful for incident response, since non-malicious processes rarely launch from temporary directories.
+
+Press the up arrow to recall the previous command. Use the pipeline to retrieve multiple details about these processes including the name, ID, path, and start time.'''
+hint = 'It may be useful to recall the available property names for a process by running `Get-Process | Get-Member`. Add a `Select-Object -Property` command to the pipeline, specifying the desired attributes.'
+answer = "`Get-Process | Where-Object -Property Path -Like '*temp*' | Select-Object -Property Name, Id, Path, StartTime`"
+type = 'str'
+str = ['KzSpbSjphHNFytkOGZrD', 'wvHReTpJFREGixSelsXT', 'wOZRKiofpYmEfqCLShBx', 'Name', 'Id', 'Path', 'StartTime']
+cs = false
+
+
+[[questions]]
+
+number = 50
+question = '''
+Great job! Now, extend the pipeline to sort the results by `StartTime`'''
+hint = 'Keep adding to the end of the previous command. This time, use `Sort-Object -Property StartTime` to sort by the StartTime property.'
+answer = "`Get-Process | Where-Object -Property Path -Like '*temp*' | Select-Object -Property Name, Id, Path, StartTime | Sort-Object -Property StartTime`"
+type = 'str'
+str = ['KzSpbSjphHNFytkOGZrD', 'wvHReTpJFREGixSelsXT', 'wOZRKiofpYmEfqCLShBx', 'Name', 'Id', 'Path', 'StartTime', 'ort-', 'bject']
+cs = false
+
+
+[[questions]]
+
+number = 51
+question = '''
+Fantastic! Export this analysis into a CSV file named `malicious-processes.csv` and an HTML report named `malicious-processes.html`'''
+hint = 'You can complete this task in two commands. Recall the previous command, sending the output to `Export-Csv -Path malicious-processes.csv`. Repeat, removing the `Export-Csv` command and add  `ConvertTo-Html` and `Out-File -FilePath malicious-processes.html` to the pipeline.'
+answer = "`Get-Process | Where-Object -Property Path -Like '*temp*' | Select-Object -Property Name, Id, Path, StartTime | Sort-Object -Property StartTime | Export-Csv -Path malicious-processes.csv ; Get-Process | Where-Object -Property Path -Like '*temp*' | Select-Object -Property Name, Id, Path, StartTime | Sort-Object -Property StartTime | ConvertTo-Html | Out-File -FilePath malicious-processes.html`"
+type = 'py'
+py = '''
+import pathlib
+htmlfile = pathlib.Path(f'{pathlib.Path.home()}/malicious-processes.html')
+csvfile = pathlib.Path(f'{pathlib.Path.home()}/malicious-processes.csv')
+# I should check the contents of these files, but I don't know what the encoding will be
+# so just return success if the files exist.
+if (htmlfile.is_file() and csvfile.is_file()):
+    ret = True
+else:
+    ret = False
+'''
+
+
+[[questions]]
+
+number = 52
+question = '''
+Nice work! Next, terminate all of the processes running from temporary directories.'''
+hint = "You can use the same base `Get-Process` and `Select-Object` commands, using `Stop-Process` to terminate the processes. You don't need `Select-Object` here (but it won't affect the outcome)."
+answer = "`Get-Process | Where-Object -Property Path -Like '*temp*' | Stop-Process`"
+type = 'py'
+py = '''
+import psutil
+ret = True
+for proc in psutil.process_iter():
+    try:
+        if ('KzSpbSjphHNFytkOGZrD' in proc.name()
+                    or 'wOZRKiofpYmEfqCLShBx' in proc.name()
+                    or 'wvHReTpJFREGixSelsXT' in proc.name()):
+            ret = False
+            break
+    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+        pass
+'''
+
+
+
+[[questions]]
+
+number = 53
+question = '''
+Excellent! Let's finish with a little cleanup. Remove all files that include `processes` anywhere in the file name using `Get-ChildItem` and `Remove-Item`'''
+hint = "Although you could use `Select-Object` to perform filtering, it's not necessary here. You can supply the `*` wildcard multiple times with the `Get-ChildItem` cmdlet and the `-Name` parameter."
+answer = '`Get-ChildItem -Name *process* | Remove-Item`'
+type = 'py'
+py = '''
+import pathlib
+home = pathlib.Path.home()
+# Lazy-load the generator returned by home.glob(), counting the files matching the pattern
+ret = (sum(1 for _ in home.glob('*processes*')) == 0)
+'''
+
+
+[[questions]]
+
+number = 54
+question = '''
+Finally, remove the files starting with `services` in the file name.'''
+hint = "Although you could use `Select-Object` to perform filtering, it's not necessary here. You can supply the `*` wildcard with the `Get-ChildItem` cmdlet and the `-Name` parameter."
+answer = '`Get-ChildItem -Name services* | Remove-Item`'
+type = 'py'
+py = '''
+import pathlib
+home = pathlib.Path.home()
+# Lazy-load the generator returned by home.glob(), counting the files matching the pattern
+ret = (sum(1 for _ in home.glob('services*')) == 0)
+'''
