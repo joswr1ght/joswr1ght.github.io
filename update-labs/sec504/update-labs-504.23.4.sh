@@ -7,11 +7,7 @@ cd ~/labs
 git pull >/dev/null
 
 # Move WeTTY to TCP/3001
-sed -i 's/:3000/:3001/' /opt/lightninglabs/sample/docker/ll-wetty/Dockerfile /opt/lightninglabs/src/templates/footer.html
-sed -i 's/ 3000/ 3001/' /opt/lightninglabs/src/templates/footer.html
-sed -i 's/3000/3001/g' /opt/lightninglabs/src/container.py
-sed -i 's/--bypass-helmet/--bypass-helmet -p 3001/' /opt/lightninglabs/src/container.py
-
+curl -s -L https://joswr1ght.github.com/update-labs/sec504/lightninglabs-20231103.tgz | tar xz - -C /opt
 llrestart
 
 popd 2>&1
