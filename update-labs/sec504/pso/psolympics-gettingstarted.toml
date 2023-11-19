@@ -272,6 +272,7 @@ hint = 'Type `Get-Process Notepad`, then press Enter. If you closed Notepad alre
 answer = '`Get-Process Notepad`'
 type = 'str'
 str = ['Handles', 'NPM', 'ProcessName', 'Notepad']
+cs = false
 
 
 [[questions]]
