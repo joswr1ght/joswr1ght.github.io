@@ -3,8 +3,8 @@
 
 echo "Running lab update script."
 pushd .
-sudo ln -s /home/sec504/bin/display4k /usr/local/bin/display4k
-sudo ln -s /home/sec504/bin/displayauto /usr/local/bin/displayauto
+sudo ln -s /home/sec504/labs/bin/display4k /usr/local/bin/display4k 2>/dev/null
+sudo ln -s /home/sec504/labs/bin/displayauto /usr/local/bin/displayauto 2>/dev/null
 popd
 echo "Update complete!"
 
