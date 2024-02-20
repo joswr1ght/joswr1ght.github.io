@@ -406,12 +406,12 @@ str = ['HOME', 'OS']
 number = 26
 py_on_begin = '''
 import csv, subprocess
-toplevelkey='HKCU\Software\Monobob2022'
+toplevelkey='HKCU\\Software\\Monobob2022'
 subprocess.run(['reg', 'delete', toplevelkey, '/f'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 with open('data/monobob2022.csv', newline='') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
-        key = f'{toplevelkey}\{row["Last"]}\{row["First"]}'
+        key = f'{toplevelkey}\\{row["Last"]}\\{row["First"]}'
         subprocess.check_call(['reg', 'add', key, '/v', 'Country', '/t', 'REG_SZ', '/d', row["Country"]], stdout=subprocess.DEVNULL)
         subprocess.check_call(['reg', 'add', key, '/v', 'Medal', '/t', 'REG_SZ', '/d', row["Medal"]], stdout=subprocess.DEVNULL)
         subprocess.check_call(['reg', 'add', key, '/v', 'Time', '/t', 'REG_SZ', '/d', row["Time"]], stdout=subprocess.DEVNULL)
