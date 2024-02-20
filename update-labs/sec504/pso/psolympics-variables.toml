@@ -1,6 +1,6 @@
 # vim: set wrap:
 psolympicsevent = 'Working with PowerShell Variables'
-psolympicsconf = 'C:/Tools/psolympics/psolympics.toml'
+psolympicsconf = 'C:\Tools\psolympics\psolympics.toml'
 completionmessage = '''
 In this PowerShell Olympics event you explored the use of PowerShell variables. You looked at several automatic variables that PowerShell makes available in every session, and how to work with them. You also looked at variable types including strings, integers, arrays, date/time, and complex objects returned by PowerShell commands. Finally, you looked at how you can apply what you've learned through some examples that use PowerShell substitution to leverage variables in strings. :sunglasses:
 

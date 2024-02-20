@@ -1,6 +1,6 @@
 # vim: set wrap:
 psolympicsevent = 'Working with the Pipeline'
-psolympicsconf = 'C:/Tools/psolympics/psolympics.toml'
+psolympicsconf = 'C:\Tools\psolympics\psolympics.toml'
 openingmessage = '''
 ^Welcome to the PowerShell Olympics!^ :1st_place_medal: :2nd_place_medal: :3rd_place_medal:
 
@@ -27,9 +27,9 @@ import psutil
 # If the work files already exists, rename it to {file}.save
 prefix = os.getenv('USERPROFILE')
 files = ['processes1.txt', 'processes2.txt', 'processes3.txt', 'processes4.txt', 'processes.csv',
-            'processes.html', 'malicious-processes.csv', 'malicious-processes.html']
+            'processes2.csv', 'processes.html', 'malicious-processes.csv', 'malicious-processes.html']
 for file in files:
-    fqfile = f'{prefix}/{file}'
+    fqfile = f'{prefix}\\{file}'
     fqfilebak = f'{fqfile}.save'
 
     try:
@@ -50,9 +50,9 @@ for proc in processes:
                 or proc.name() == 'rexplorer.exe'):
         proc.kill()
 
-mw = [f'{os.getenv("TEMP")}/KzSpbSjphHNFytkOGZrD.exe',
-            f'{os.getenv("TEMP")}/wvHReTpJFREGixSelsXT.exe',
-            f'C:/temp/wOZRKiofpYmEfqCLShBx.exe']
+mw = [f'{os.getenv("TEMP")}\\KzSpbSjphHNFytkOGZrD.exe',
+            f'{os.getenv("TEMP")}\\wvHReTpJFREGixSelsXT.exe',
+            f'C:\\temp\\wOZRKiofpYmEfqCLShBx.exe']
 for m in mw:
     try:
         os.remove(m)
@@ -131,7 +131,7 @@ number = 6
 question = '''
 The pipeline is valuable for more than just `Get-Service`. We can create pipelines to process the output of other commands as well.
 
-Use create a pipeline to sort the output of `Get-Process` by name. Type `Get-Process | Sort-Object -Property Name`, then press Enter.'''
+Create a pipeline to sort the output of `Get-Process` by name. Type `Get-Process | Sort-Object -Property Name`, then press Enter.'''
 hint = 'Type `Get-Process | Sort-Object -Property Name`, then press Enter.'
 answer = '`Get-Process | Sort-Object -Property Name`'
 type = 'str'
@@ -192,7 +192,7 @@ answer = '`Get-Process > processes1.txt`'
 type = 'py'
 py = '''
 import os
-ret = os.path.exists(f'{os.getenv("USERPROFILE")}/processes1.txt')
+ret = os.path.exists(f'{os.getenv("USERPROFILE")}\\processes1.txt')
 '''
 
 
@@ -208,7 +208,7 @@ answer = '`Get-Process | Out-File -FilePath processes2.txt`'
 type = 'py'
 py = '''
 import os
-ret = os.path.exists(f'{os.getenv("USERPROFILE")}/processes2.txt')
+ret = os.path.exists(f'{os.getenv("USERPROFILE")}\\processes2.txt')
 '''
 
 
@@ -225,7 +225,7 @@ type = 'py'
 py = '''
 import os
 ret = False
-filename = f'{os.getenv("USERPROFILE")}/processes3.txt'
+filename = f'{os.getenv("USERPROFILE")}\\processes3.txt'
 if os.path.exists(filename):
     with open(filename) as f:
         if f.read(8) == '\nHandles':
@@ -244,7 +244,7 @@ hint = 'Type `Get-Childitem processes*.txt` to see the three output files.'
 answer = '`Get-ChildItem processes*.txt`'
 type = 'str'
 str = ['Mode', 'LastWriteTime', 'processes1', 'processes2', 'processes3']
-
+cs = false
 
 
 [[questions]]
@@ -273,7 +273,7 @@ answer = '`Get-Process | Tee-Object -FilePath processes4.txt`'
 type = 'py'
 py = '''
 import os
-if os.path.exists(f'{os.getenv("USERPROFILE")}/processes4.txt'):
+if os.path.exists(f'{os.getenv("USERPROFILE")}\\processes4.txt'):
     ret = True
 else:
     ret = False
@@ -287,14 +287,14 @@ question = '''
 Nice work! `Tee-Object` duplicated the output of `Get-Process`, showing it on the screen and saving it to `processes4.txt`
 
 PowerShell also supports other output mechanisms, such as `Export-Csv`. Create a list of processes, sending the output to the pipeline with `Export-Csv -Path processes.csv`.
-NOTE: This command will take 3-5 minutes to complete. This is a good time to stretch or get a drink!'''
+NOTE: This command will take several minutes to complete. This is a good time to stretch or get a drink!'''
 hint = 'Continue to use `Get-Process`, this time sending the output to `Export-Csv -Path processes.csv` through the pipeline.'
 answer = '`Get-Process | Export-Csv -Path processes.csv`'
 type = 'py'
 py = '''
 import os
 ret = False
-filename = f'{os.getenv("USERPROFILE")}/processes.csv'
+filename = f'{os.getenv("USERPROFILE")}\\processes.csv'
 if os.path.exists(filename):
     with open(filename) as f:
         fc = f.read()
@@ -365,7 +365,7 @@ import shutil
 import psutil
 import subprocess
 import os
-dstfile = f'{os.getenv("TEMP")}/rexplorer.exe'
+dstfile = f'{os.getenv("TEMP")}\\rexplorer.exe'
 if not os.path.exists(dstfile):
     shutil.copyfile('data/rexplorer.exe', dstfile)
 if (not 'rexplorer.exe' in (p.name() for p in psutil.process_iter())):
@@ -523,7 +523,7 @@ answer = '`Get-Process | Select-Object -Property Name, Id, Path, CPU, WorkingSet
 type = 'py'
 py = '''
 import os
-ret = os.path.exists(f'{os.getenv("USERPROFILE")}/processes.html')
+ret = os.path.exists(f'{os.getenv("USERPROFILE")}\\processes.html')
 '''
 
 
@@ -583,13 +583,13 @@ str = ['DependentServices', 'uhssvc']
 
 number = 36
 question = '''
-Good work! Run that command again, this time exporting the 5 fields into a CSV file named `processes.csv`'''
-hint = 'Press the up arrow to recall the previous command. Then, extend the pipeline adding `Export-Csv -Path processes.csv`. Make sure you are still in your user profile directory (`cd $env:userprofile`).'
-answer = '`Get-Service eventlog | Select-Object -Property Status, Name, DisplayName, StartType, DependentServices | Export-Csv -Path processes.csv`'
+Good work! Run that command again, this time exporting the 5 fields into a CSV file named `processes2.csv`'''
+hint = 'Press the up arrow to recall the previous command. Then, extend the pipeline adding `Export-Csv -Path processes2.csv`. Make sure you are still in your user profile directory (`cd $env:userprofile`).'
+answer = '`Get-Service eventlog | Select-Object -Property Status, Name, DisplayName, StartType, DependentServices | Export-Csv -Path processes2.csv`'
 type = 'py'
 py = '''
 import os
-ret = os.path.exists(f'{os.getenv("USERPROFILE")}/processes.csv')
+ret = os.path.exists(f'{os.getenv("USERPROFILE")}\\processes2.csv')
 '''
 
 
@@ -621,7 +621,7 @@ str = ['DisplayName', 'Windows Remote Management']
 
 number = 39
 question = '''
-In the previous command we created a string object `'winrm'` as the input to the `Get-Service` cmdlet. Using a pipeline in this manner is known as parameter binding, where a PowerShell command matches the input you supply in the pipeline to a designated parameter. `'winrm'` is a string, but in the pipeline it becomes an object. Type `'winrm' | Get-Member` to see all of the string properties.'''
+In the previous command we created a string object `'winrm'` as the input to the `Get-Service` cmdlet. Using a pipeline in this manner is known as ^parameter binding^, where a PowerShell command matches the input you supply in the pipeline to a designated parameter. `'winrm'` is a string, but in the pipeline it becomes an object. Type `'winrm' | Get-Member` to see all of the string properties.'''
 hint = "Type `'winrm' | Get-Member`"
 answer = "`'winrm' | Get-Member`"
 type = 'str'
@@ -633,7 +633,7 @@ str = ['TypeName: System.String']
 
 number = 40
 question = '''
-Most of these elements are methods that perform an action on the string. This starts to exceed the focus of this event, but the important point is this: everything in the pipeline is an object, and PowerShell commands can act upon it. Type `next` then press Enter to continue.'''
+Most of these elements are methods that perform an action on the string. This starts to exceed the focus of this event, but the important point is this: ^everything in the pipeline is an object, and PowerShell commands can act upon it^. Type `next` then press Enter to continue.'''
 hint = 'Type `next`, then press Enter to continue.'
 answer = '`next`'
 type = 'str'
@@ -647,7 +647,7 @@ number = 41
 py_on_begin = '''
 import os
 services = 'wuauserv\nxblgamesave\nwinrm\nspooler\nnetlogon'
-filename = f'{os.getenv("USERPROFILE")}/services.txt'
+filename = f'{os.getenv("USERPROFILE")}\\services.txt'
 with open(filename, 'w') as f:
     f.write(services)
 '''
@@ -696,7 +696,7 @@ import shutil
 import psutil
 import subprocess
 import os
-dstfile = f'{os.getenv("TEMP")}/rexplorer.exe'
+dstfile = f'{os.getenv("TEMP")}\\rexplorer.exe'
 if not os.path.exists(dstfile):
     shutil.copyfile('data/rexplorer.exe', dstfile)
 
@@ -763,11 +763,11 @@ import shutil
 import psutil
 import subprocess
 import os
-mw = [f'{os.getenv("TEMP")}/KzSpbSjphHNFytkOGZrD.exe',
-        f'{os.getenv("TEMP")}/wvHReTpJFREGixSelsXT.exe',
-        f'C:/temp/wOZRKiofpYmEfqCLShBx.exe']
-if not os.path.exists('C:/temp'):
-    os.mkdir('C:/temp')
+mw = [f'{os.getenv("TEMP")}\\KzSpbSjphHNFytkOGZrD.exe',
+        f'{os.getenv("TEMP")}\\wvHReTpJFREGixSelsXT.exe',
+        f'C:\\temp\\wOZRKiofpYmEfqCLShBx.exe']
+if not os.path.exists('C:\\temp'):
+    os.mkdir('C:\\temp')
 try:
     for m in mw:
         shutil.copyfile('data/rexplorer.exe', m)
