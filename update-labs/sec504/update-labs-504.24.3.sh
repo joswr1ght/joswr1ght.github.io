@@ -1,9 +1,12 @@
 #!/bin/bash
 { # this ensures the entire script is downloaded #
+# Fix wiki GitHub repo following reflow for video removal in MajorUpdate2024.1
+pushd . > /dev/null
+cd ~/wiki
+git fetch origin
+git reset --hard origin/MajorUpdate2024.1
+popd > /dev/null
 
-cd /home/sec504/labs && git pull >>/tmp/update-labs.log 2>&1
-cd /home/sec504/labs/onlinepasstgt/edirectory && ./build.sh >>/tmp/update-labs.log 2>&1
-ssh-keygen -f "/home/sec504/.ssh/known_hosts" -R "172.30.0.185" >>/tmp/update-labs.log 2>&1
 echo "Update complete!"
 
 } # this ensures the entire script is downloaded #
