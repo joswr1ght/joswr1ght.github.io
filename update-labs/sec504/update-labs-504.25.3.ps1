@@ -4,7 +4,7 @@
 pushd
 cd C:\wiki
 git fetch origin
-git reset --hard origin/MajorUpdate2024.1
+git reset --hard origin/MajorUpdate2025.1
 popd
 
 Write-Host "Update complete!"
