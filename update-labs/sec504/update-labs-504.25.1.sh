@@ -5,9 +5,11 @@
 pushd . > /dev/null
 cd ~/wiki
 git fetch origin
-if [[ -f /usr/local/bin/ollama ]]; then
+if [[ -f "/usr/local/bin/ollama" ]]; then
+    echo -n "Applying 2025.1 update... "
     git reset --hard origin/MajorUpdate2025.1
 else
+    echo -n "Applying 2024.1 update... "
     git reset --hard origin/MajorUpdate2024.1
 fi
 popd > /dev/null
