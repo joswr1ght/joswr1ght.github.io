@@ -8,6 +8,8 @@ git fetch origin
 if [[ -f "/usr/local/bin/ollama" ]]; then
     echo -n "Applying 2025.1 update... "
     git reset --hard origin/MajorUpdate2025.1
+    # Set Firefox as default browser for HTML files (Bruno stole this)
+    xdg-mime default firefox.desktop text/html
 else
     echo -n "Applying 2024.1 update... "
     git reset --hard origin/MajorUpdate2024.1
