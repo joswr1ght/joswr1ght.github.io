@@ -1,9 +1,8 @@
 #!/bin/bash
 { # this ensures the entire script is downloaded #
-# Fix wiki GitHub repo following reflow for video removal
-# If the /usr/local/bin/ollama file exists, we are running a 2025.1 update
 pushd . > /dev/null
-cd ~/wiki
+cd ~/labs
+git reset HEAD --hard
 git fetch origin
 popd > /dev/null
 
