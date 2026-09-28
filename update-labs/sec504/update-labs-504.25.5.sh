@@ -43,8 +43,6 @@ if [ -d "$CURLMCP" ]; then
             fi
         fi
 
-        echo "If the offensive AI lab is running, stop it with stopoffensiveai and start"
-        echo "it again with gooffensiveai to use the repaired containers."
     fi
 fi
 
