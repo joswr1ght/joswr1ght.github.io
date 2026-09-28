@@ -20,7 +20,7 @@ if [ -d "$CURLMCP" ]; then
         sudo service docker start >/dev/null 2>&1
         docker rm -f curl-mcp >/dev/null 2>&1
 
-        echo -n "Rebuilding the cURL MCP Agent container (a few minutes)... "
+        echo -n "Rebuilding the cURL MCP Agent container (a few seconds)... "
         if "$CURLMCP/build.sh" >/tmp/curl-mcp-build.log 2>&1 ; then
             echo "Done."
         else
