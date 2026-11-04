@@ -23,6 +23,12 @@ for image in bc-processes bc-olympicevent bc-permissions bc-json; do
     "./$image/build.sh" || exit 1
 done
 
+# Rebuild the Password List Filtering Lightning Lab with pw-inspector from
+# THC-Hydra 9.4. Hydra 9.5+ changed the filter so `-m 10` outputs nothing.
+echo "Rebuilding ll-passwordlistfiltering..."
+docker build -t ll-passwordlistfiltering --network=host \
+    ~/labs/lightninglabs/docker/ll-passwordlistfiltering || exit 1
+
 echo "Update complete!"
 
 } # this ensures the entire script is downloaded #
