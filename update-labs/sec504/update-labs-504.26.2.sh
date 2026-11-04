@@ -28,6 +28,7 @@ done
 echo "Rebuilding ll-passwordlistfiltering..."
 docker build -t ll-passwordlistfiltering --network=host \
     ~/labs/lightninglabs/docker/ll-passwordlistfiltering || exit 1
+sudo service lightninglabs restart || exit 1
 
 echo "Update complete!"
 
