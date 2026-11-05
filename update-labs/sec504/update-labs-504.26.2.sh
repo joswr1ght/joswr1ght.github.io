@@ -31,8 +31,8 @@ docker build -t ll-passwordlistfiltering --network=host \
 # Rebuild the Metasploit Lightning Lab with Metasploit 6.3.0+ for ARM/x64
 # compatability in the Cacti exploit.
 echo "Rebuilding ll-metasploit..."
-docker build -t ll-metassploit --network=host \
-    ~/labs/lightninglabs/docker/ll-metassploit || exit 1
+docker build -t ll-metasploit --network=host \
+    ~/labs/lightninglabs/docker/ll-metasploit || exit 1
 sudo service lightninglabs restart || exit 1
 
 echo "Update complete!"
